@@ -1,10 +1,11 @@
 let entities = {
-    Ship: () => {
-        this.health = 100;
-        this.shield = 2;
+    Ship: function(health, shield) {
+        console.log(this);
+        this.health = health;
+        this.shield = shield;
     },
 
-    Word: (x, y) => {
+    Word: function(x, y) {
         this.x = x;
         this.y = y;
         this.timeCreated = new Date().getTime();

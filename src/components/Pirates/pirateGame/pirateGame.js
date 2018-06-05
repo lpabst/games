@@ -13,7 +13,9 @@ let pirateGame = {
 
         let wordsToType = [];
         let score = 0;
-        let ship = new entities.Ship();
+        console.log(entities);
+        let ship = new entities.Ship(100, 2);
+        console.log(ship);
 
         var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, score, ship };
 
@@ -77,7 +79,7 @@ let pirateGame = {
         let { wordsToType, ship, canvas } = data;
 
         // add words to the user's array of words they need to type
-        if (data.animationFrame % 20 === 0){
+        if (data.animationFrame % 100 === 0){
             let randX = Math.floor(Math.random() * (canvas.width-150)) + 150;
             let randY = Math.floor(Math.random() * (canvas.height-100)) + 100;
             let newWord = new entities.Word(randX, randY);
@@ -96,30 +98,52 @@ let pirateGame = {
     },
 
     render: data => {
-        let { context } = data;
+        let { canvas, context, ship, score, wordsToType } = data;
 
         // Black background
         context.fillStyle = '#000000';
-        context.fillRect(0, 0, data.canvas.width, data.canvas.height);
+        context.fillRect(0, 0, canvas.width, canvas.height);
 
         // white Game Info
         context.fillStyle = 'white';
-        context.font = '24px Arial';
-        context.fillText('Score: ' + data.score, 10, 25);
-        context.fillText('Health: ' + data.ship.health, 10, 50);
-        context.fillText('Shield: ' + data.ship.shield, 10, 50);
+        context.font = '20px Arial';
+        context.fillText('Score: ' + score, 10, 25);
+        context.fillText('Health: ' + ship.health, 10, 50);
+        context.fillText('Shield: ' + ship.shield, 10, 80);
 
         // white words to type
         context.fillStyle = 'white';
         context.font = '12px Arial';
-        data.wordsToType.forEach( obj => {
+        wordsToType.forEach( obj => {
             context.fillText(obj.word, obj.x, obj.y);
         })
 
     },
     
     gameOver: data => {
+        game.render(data);
 
+        // game over text
+        let context = data.context;
+        context.fillStyle = 'white';
+        context.font = '42px Arial';
+        context.fillText('Game Over', 200, 300);
+
+        if (data.gameOverMessage) {
+            document.getElementById('messageDiv').innerText = data.gameOverMessage;
+        }
+        
+        document.querySelectorAll('.btn').forEach( btn => btn.style.visibility = 'visible');
+
+        // Send score to back end
+        let name = document.getElementById('username').value || 'anonymous' 
+        $.post('/api/newHighScore', {
+            name: name,
+            score: data.score
+        })
+        .done( res => {
+            window.getHighScores();
+        })
     },
 }
 
