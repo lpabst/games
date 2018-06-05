@@ -43,8 +43,9 @@ class Pirates extends Component {
 
           <ul className='instructions'>
             <li>You are the captain of a ship being attacked by pirates! Your ship starts with 100 health and a shield/hull thickness of 2</li>
-            <li>Type out words that appear on the screen. As you type the words, your cannons fire and the enemy ships take damage</li>
-            <li>If it takes too long to type a word, it will disappear off your screen, and the enemy ships' cannons will fire at your ship</li>
+            <li>Type out words that appear on the screen. As you type the white words, your cannons fire and the enemy ships take damage</li>
+            <li>If it takes too long to type a word, it will disappear off your screen, and the enemy ship's cannons will fire at your ship</li>
+            <li>Every now and then a green word will appear, which repairs your ship for 2 health if you type it fast enough. If it disappears off the screen before you type it, no damage is taken</li>
             <li>The damage a word causes is equal to the length of the word, minus the shield of the ship being attacked. So a 7 letter word hitting a ship with 2 shield would cause 5 damage</li>
             <li>You can see what you have typed right above the game board</li>
             <li>Hitting Enter will clear what you've already typed, Backspace and Delete remove 1 letter from the end of what you've typed</li>

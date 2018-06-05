@@ -15,8 +15,10 @@ let pirateGame = {
         let typedWord = '';
         let score = 0;
         let ship = new entities.Ship(100, 2);
+        let enemy = new entities.Ship(50, 3);
+        let shipsDestroyed = 0;
 
-        var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, ship };
+        var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, ship, enemy, shipsDestroyed };
 
         window.addEventListener('keydown', function(e) { 
             pirateGame.handleInput(e, data) 
@@ -94,10 +96,29 @@ let pirateGame = {
         // Finds the first word that matches what the user has typed so far and removes it from the list
         for (let i = wordsToType.length-1; i >= 0; i--){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
+
+                if (wordsToType[i].type === 'cannonball'){
+                    // score goes up & enemy ship takes damage
+                    data.score ++;
+                    let damage = wordsToType[i].word.length - data.enemy.shield;
+                    data.enemy.health -= damage > 0 ? damage : 0;
+
+                    // Additional points for destroying a ship
+                    if (data.enemy.health <= 0){
+                        data.score += 100;
+                        data.shipsDestroyed ++;
+
+                        // Create a new enemy
+                        let newEnemyHealth = (60 * data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
+                        let newEnemyShield = Math.floor(Math.random() * 5) + 1
+                        data.enemy = new entities.Ship(newEnemyHealth, newEnemyShield);
+                    }
+                }else{
+                    data.ship.health += 2;
+                }
+
                 data.typedWord = '';
                 data.wordsToType.splice(i, 1);
-                // enemy ship takes damage
-                // score goes up
                 return;
             }
         }
@@ -130,8 +151,9 @@ let pirateGame = {
                 wordsToType.splice(i, 1);
 
                 // If it's a cannonball, it causes damage equal to the length of the word
-                if (wordsToType[i].type === 'cannonball'){
-                    ship.health -= ( wordsToType[i].word.length - ship.shield );
+                if (wordsToType[i] && wordsToType[i].type === 'cannonball'){
+                    let damage = wordsToType[i].word.length - ship.shield;
+                    data.ship.health -= ( damage > 0 ) ? damage : 0;
                 }
             }
         }
@@ -150,7 +172,7 @@ let pirateGame = {
         context.font = '20px Arial';
         context.fillText('Score: ' + score, 10, 25);
         context.fillText('Health: ' + ship.health, 10, 50);
-        context.fillText('Shield: ' + ship.shield, 10, 80);
+        context.fillText('Shield: ' + ship.shield, 10, 75);
 
         // Words to type
         context.font = '14px Arial';
@@ -162,6 +184,13 @@ let pirateGame = {
             }
             context.fillText(obj.word, obj.x, obj.y);
         })
+
+        // Red Text for enemy info
+        context.fillStyle = 'red';
+        context.font = '20px Arial';
+        context.fillText('Enemy', 450, 25);
+        context.fillText('Health: ' + data.enemy.health, 450, 50);
+        context.fillText('Shield: ' + data.enemy.shield, 450, 75);
 
     },
     
