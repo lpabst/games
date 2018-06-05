@@ -27,7 +27,7 @@ class Pirates extends Component {
         <div className="gameWrapper" >
 
           <div className='controls' >
-            <p id='usernameDisplay'>{this.state.username}</p>
+            <p id='usernameDisplay'>Username: {this.state.username}</p>
             <input id='username' placeholder="Type Your Name" onChange={(e) => this.setState({username: e.target.value})} value={this.state.username} />
             <div className='btn' id="startBtn" onClick={() => this.startNewGame} > New Game </div>
             <div className='btn' id="highScoresBtn" onClick={() => this.toggleShowHighScores()} > High Scores </div>
