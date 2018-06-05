@@ -41,9 +41,11 @@ class Pirates extends Component {
           </div>
 
           <ul className='instructions'>
-            <li>Earn points by eating the green pieces of food and staying alive longer</li>
-            <li>Use the arrows to change directions</li>
-            <li>Space Bar pauses the game</li>
+            <li>You are the captain of a ship being attacked by pirates! Your ship starts with 100 health and a shield/hull thickness of 2</li>
+            <li>Type out words that appear on the screen. As you type the words, your cannons fire and the enemy ships take damage</li>
+            <li>If it takes too long to type a word, it will disappear off your screen, and the enemy ships' cannons will fire at your ship</li>
+            <li>The damage a word causes is equal to the length of the word, minus the shield of the ship being attacked. So a 7 letter word hitting a ship with 2 shield would cause 5 damage</li>
+            <li>*Optionally, you can spend your hard earned points on upgrades in the upgrades menu. Opening the upgrade menu will also pause the game</li>
           </ul>
 
           { this.state.showHighScores &&
