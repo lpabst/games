@@ -68,8 +68,18 @@ let pirateGame = {
             pirateGame.togglePauseGame(data);
         }
 
-        data.typedWord += e.key;
-        pirateGame.checkForCompleteWord(data);
+        // backspace and delete should both remove most recently typed letter, otherwise only letters should be added to the word
+        if (e.keyCode === 8 || e.keyCode === 46){
+            data.typedWord = data.typedWord.substring(0, data.typedword.length-1);
+        }
+        else if (e.keycode === 13){
+            pirateGame.checkForCompleteWord(data);
+            data.typedWord = '';
+        }
+        else if (e.keyCode >= 65 && e.keyCode <= 90){
+            data.typedWord += e.key;
+            pirateGame.checkForCompleteWord(data);
+        }
     },
 
     checkForCompleteWord: data => {
