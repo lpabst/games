@@ -44,14 +44,14 @@
 
 .canvasWrapper{
     width: 600px;
-    height: 600px;
+    height: 620px;
     margin: 20px auto 0px auto;
     position: relative;
 }
 
 .canvasWrapper canvas{
     position: absolute;
-    top: 0px;
+    top: 20px;
     left: 0px;
     background: black;
 }
@@ -65,6 +65,12 @@
     color: white;
     z-index: 120;
     text-align: center;
+}
+
+#typedWord{
+    position: absolute;
+    top: 0px;
+    left: 250px;
 }
 
 .instructions{

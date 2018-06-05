@@ -38,6 +38,7 @@ class Pirates extends Component {
           <div className='canvasWrapper'>
             <canvas width='600' height='600' id='canvas'></canvas>
             <div id='messageDiv' ></div>
+            <div id='typedWord' ></div>
           </div>
 
           <ul className='instructions'>
@@ -45,6 +46,8 @@ class Pirates extends Component {
             <li>Type out words that appear on the screen. As you type the words, your cannons fire and the enemy ships take damage</li>
             <li>If it takes too long to type a word, it will disappear off your screen, and the enemy ships' cannons will fire at your ship</li>
             <li>The damage a word causes is equal to the length of the word, minus the shield of the ship being attacked. So a 7 letter word hitting a ship with 2 shield would cause 5 damage</li>
+            <li>You can see what you have typed right above the game board</li>
+            <li>Hitting Enter will clear what you've already typed, Backspace and Delete remove 1 letter from the end of what you've typed</li>
             <li>*Optionally, you can spend your hard earned points on upgrades in the upgrades menu. Opening the upgrade menu will also pause the game</li>
           </ul>
 

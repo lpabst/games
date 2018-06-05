@@ -67,19 +67,26 @@ let pirateGame = {
             e.preventDefault();
             pirateGame.togglePauseGame(data);
         }
-
-        // backspace and delete should both remove most recently typed letter, otherwise only letters should be added to the word
+        
+        // backspace and delete should both remove most recently typed letter
         if (e.keyCode === 8 || e.keyCode === 46){
-            data.typedWord = data.typedWord.substring(0, data.typedword.length-1);
+            e.preventDefault();
+            data.typedWord = data.typedWord.substring(0, data.typedWord.length-1);
         }
-        else if (e.keycode === 13){
+        // enter clears what user has typed
+        else if (e.keyCode === 13){
+            e.preventDefault();
             pirateGame.checkForCompleteWord(data);
             data.typedWord = '';
         }
+        // Only letters should be added to the word
         else if (e.keyCode >= 65 && e.keyCode <= 90){
+            e.preventDefault();
             data.typedWord += e.key;
             pirateGame.checkForCompleteWord(data);
         }
+
+        document.getElementById('typedWord').innerText = data.typedWord;
     },
 
     checkForCompleteWord: data => {
@@ -87,9 +94,10 @@ let pirateGame = {
         // Finds the first word that matches what the user has typed so far and removes it from the list
         for (let i = wordsToType.length-1; i >= 0; i--){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
-                typedWord = '';
-                wordsToType.splice(i, 1);
-                // enemy ship takes damage here
+                data.typedWord = '';
+                data.wordsToType.splice(i, 1);
+                // enemy ship takes damage
+                // score goes up
                 return;
             }
         }
