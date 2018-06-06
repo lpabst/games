@@ -51,6 +51,7 @@ class Pirates extends Component {
     })
     .then (res => {
       console.log(res);
+      this.getPiratesHighScores();
     })
     .catch(err => {
       console.log(err);
