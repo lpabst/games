@@ -1,7 +1,13 @@
 import entities from './entities';
 
 let pirateGame = {
-    init: () => {
+    init: (difficulty) => {
+        let wordDurationMapping = {
+            Easy: 5000,
+            Medium: 3500,
+            Hard: 2000
+        }
+
         document.getElementById('messageDiv').innerText = '';
         document.querySelectorAll('.btn').forEach( btn => btn.style.visibility = 'hidden');
 
@@ -13,12 +19,13 @@ let pirateGame = {
 
         let wordsToType = [];
         let typedWord = '';
+        let wordDuration = wordDurationMapping[difficulty];
         let score = 0;
         let ship = new entities.Ship(100, 2);
         let enemy = new entities.Ship(50, 3);
         let shipsDestroyed = 0;
 
-        var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, ship, enemy, shipsDestroyed };
+        var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, score, ship, enemy, shipsDestroyed };
 
         window.addEventListener('keydown', function(e) { 
             pirateGame.handleInput(e, data) 
@@ -147,7 +154,7 @@ let pirateGame = {
         // Any word that has been up for longer than 5 seconds disappears
         let now = new Date().getTime();
         for (let i = wordsToType.length-1; i >= 0; i--){
-            if (now - wordsToType[i].timeCreated >= 3000){
+            if (now - wordsToType[i].timeCreated >= data.wordDuration){
                 // If it's a cannonball, it causes damage equal to the length of the word
                 if (wordsToType[i] && wordsToType[i].type === 'cannonball'){
                     let damage = wordsToType[i].word.length - ship.shield;

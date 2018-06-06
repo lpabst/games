@@ -20,14 +20,14 @@ class Pirates extends Component {
   }
 
   componentDidMount(){
-    axios.get('/api/getHighScores')
+    axios.get('/api/getPiratesHighScores')
     .then( res => {
       console.log(res);
     })
   }
 
   startNewGame(){
-    pirateGame.init();
+    pirateGame.init(this.state.difficulty);
   }
 
   toggleShowHighScores(){
