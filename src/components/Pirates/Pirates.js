@@ -60,6 +60,14 @@ class Pirates extends Component {
             <div id='typedWord' ></div>
           </div>
 
+          <div id='shopWrapper' >
+            <div className='shopItem' >
+              <p>Title: Better Wood</p>
+              <p>Cost: 20 pts</p>
+              <p>Explanation: Increase your shield by 1</p>
+            </div>
+          </div>
+
           <ul className='instructions'>
             <li>You are the captain of a ship being attacked by pirates! Your ship starts with 100 health and a shield/hull thickness of 2</li>
             <li>Type out words that appear on the screen. As you type the white words, your cannons fire and the enemy ships take damage</li>

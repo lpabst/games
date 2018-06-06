@@ -2,10 +2,11 @@ import entities from './entities';
 
 let pirateGame = {
     init: (difficulty) => {
-        let wordDurationMapping = {
-            Easy: 5000,
-            Medium: 3500,
-            Hard: 2000
+        let difficultyMapping = {
+            // difficulty: [health, shield, wordDuration, newWordFrequency]
+            'Easy': [150, 2, 5000, 100],
+            'Medium': [125, 1, 3500, 80],
+            'Hard': [100, 0, 2000, 60],
         }
 
         document.getElementById('messageDiv').innerText = '';
@@ -19,13 +20,16 @@ let pirateGame = {
 
         let wordsToType = [];
         let typedWord = '';
-        let wordDuration = wordDurationMapping[difficulty];
         let score = 0;
-        let ship = new entities.Ship(100, 2);
+        let health = difficultyMapping[difficulty][0];
+        let shield = difficultyMapping[difficulty][1];
+        let wordDuration = difficultyMapping[difficulty][2];
+        let newWordFrequency = difficultyMapping[difficulty][3];
+        let ship = new entities.Ship(health, shield);
         let enemy = new entities.Ship(50, 3);
         let shipsDestroyed = 0;
 
-        var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, score, ship, enemy, shipsDestroyed };
+        var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, newWordFrequency, score, ship, enemy, shipsDestroyed };
 
         window.addEventListener('keydown', function(e) { 
             pirateGame.handleInput(e, data) 
@@ -54,13 +58,7 @@ let pirateGame = {
 
     togglePauseGame: data => {
         if (data.gameRunning){
-            let currentDirection;
-            if (data.snake.velX === 1) currentDirection = 'RIGHT';
-            if (data.snake.velX === -1) currentDirection = 'LEFT';
-            if (data.snake.velY === 1) currentDirection = 'DOWN';
-            if (data.snake.velY === -1) currentDirection = 'UP';
-
-            document.getElementById('messageDiv').innerText = 'Paused. Press space to continue. (Moving ' + currentDirection + ')';
+            document.getElementById('messageDiv').innerText = 'Paused. Press Left arrow to continue.';
             data.gameRunning = false;
         }else{
             document.getElementById('messageDiv').innerText = '';
@@ -110,8 +108,9 @@ let pirateGame = {
                     let damage = wordsToType[i].word.length - data.enemy.shield;
                     data.enemy.health -= damage > 0 ? damage : 0;
 
-                    // Additional points for destroying a ship
+                    // When destroying an enemy ship
                     if (data.enemy.health <= 0){
+                        // Additional points
                         data.score += 100;
                         data.shipsDestroyed ++;
 
@@ -119,6 +118,12 @@ let pirateGame = {
                         let newEnemyHealth = (60 * data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
                         let newEnemyShield = Math.floor(Math.random() * 5) + 1
                         data.enemy = new entities.Ship(newEnemyHealth, newEnemyShield);
+
+                        // things get harder (max out at 1500ms word duration and a new word every 50 animationFrames)
+                        data.wordDuration -= 100;
+                        data.newWordFrequency -= 1;
+                        if (data.wordDuration < 1500) data.wordDuration = 1500;
+                        if (data.newWordFrequency < 50) data.newWordFrequency = 50;
                     }
                 }else{
                     data.ship.health += 2;
@@ -132,10 +137,10 @@ let pirateGame = {
     },
 
     update: data => {
-        let { wordsToType, ship, canvas } = data;
+        let { wordsToType, newWordFrequency, ship, canvas } = data;
 
-        // Every 100 frames, add a word to the user's array of words they need to type
-        if (data.animationFrame % 100 === 0){
+        // Every 60/80/100 frames (depending on difficulty), add a word to the user's array of words they need to type
+        if (data.animationFrame % newWordFrequency === 0){
             let randX = Math.floor(Math.random() * (canvas.width-150)) + 50;
             let randY = Math.floor(Math.random() * (canvas.height-100)) + 85;
             let newWord = new entities.Word(randX, randY, 'cannonball');
@@ -151,7 +156,7 @@ let pirateGame = {
             }
         }
 
-        // Any word that has been up for longer than 5 seconds disappears
+        // Any word that has been up for longer than the chosen word duration disappears
         let now = new Date().getTime();
         for (let i = wordsToType.length-1; i >= 0; i--){
             if (now - wordsToType[i].timeCreated >= data.wordDuration){

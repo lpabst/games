@@ -73,6 +73,18 @@
     left: 250px;
 }
 
+#shopWrapper{
+    width: 400px;
+    height: 400px;
+    overflow: scroll;
+    border: 1px solid black;
+    background: #ccc;
+    color: black;
+    position: absolute;
+    right: -400px;
+    top: calc(50% - 300px);
+}
+
 .instructions{
     width: 400px;
     height: auto;
