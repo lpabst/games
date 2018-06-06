@@ -119,31 +119,11 @@
     cursor: pointer;
 }
 
-#highScoresTable{
-    width: 600px;
-    margin: 0 auto;
-}
-
-#highScoresTable tbody{
-    width: 600px;
-}
-
-#highScoresTable tr{
-    height: 30px;
-    line-height: 30px;
-}
-
-#highScoresTable th{
-    border: 1px solid black;
-    font-size: 22px;
-    text-align: left;
-    padding-left: 5px;
+.highScoresHeader{
+    width: 300px;
+    height: auto;
     font-weight: bold;
-}
-
-#highScoresTable td{
-    border: 1px solid black;
-    font-size: 18px;
-    text-align: left;
-    padding-left: 5px;
+    font-size: 24px;
+    margin: 0 auto;
+    text-align: center;
 }

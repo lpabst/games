@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Pirates.css';
 
 import pirateGame from './pirateGame/pirateGame.js';
+import HighScoreTable from './components/HighScoreTable';
 
 class Pirates extends Component {
   constructor(props){
@@ -123,18 +124,13 @@ class Pirates extends Component {
           { this.state.showHighScores &&
             <div id='highScores'>
               <div className='closeX' onClick={() => this.toggleShowHighScores()} > x </div>
-              <table id='highScoresTable'>
-                <tbody id='highScoresTableBody'> 
-                  {
-                    this.state.highScores.easy.map( (item, i) => {
-                      return <tr key={i} >
-                        <td>Score: {item.score}</td>
-                        <td>Name: {item.name}</td>
-                      </tr>
-                    })
-                  }
-                </tbody>
-              </table>
+              
+              <p className='highScoresHeader' >High Scores</p>
+
+              <HighScoreTable title='Hard' rows={this.state.highScores.hard} />
+              <HighScoreTable title='Medium' rows={this.state.highScores.medium} />
+              <HighScoreTable title='Easy' rows={this.state.highScores.easy} />
+
             </div>
           }
 
