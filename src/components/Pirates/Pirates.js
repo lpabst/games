@@ -17,11 +17,18 @@ class Pirates extends Component {
         easy: [],
         medium: [],
         hard: []
-      }
+      },
+      shopUpgrades: [
+        { title: 'Better Wood!', explanation: 'Increase your shield by 1', repurchasable: false, cost: 20, shield: 1 },
+        { title: 'Bigger Cannons!', explanation: 'Increase your damage by 1', repurchasable: false, cost: 20, damage: 1 },
+        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: true, cost: 20, health: 30 },
+        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 50, wordDuration: 500},
+      ]
     }
 
     this.getPiratesHighScores = this.getPiratesHighScores.bind(this);
     this.newPiratesHighScore = this.newPiratesHighScore.bind(this);
+    this.buyShopItem = this.buyShopItem.bind(this);
   }
 
   componentDidMount(){
@@ -74,6 +81,24 @@ class Pirates extends Component {
     })
   }
 
+  buyShopItem(i){
+    let upgrade = this.state.shopUpgrades[i];
+    
+    // carry out effects
+    this.data.score -= upgrade.cost ? upgrade.cost : 0;
+    this.data.ship.health += upgrade.health ? upgrade.health : 0;
+    this.data.ship.increasedDamage += upgrade.damage ? upgrade.damage : 0;
+    this.data.ship.shield += upgrade.shield ? upgrade.shield : 0;
+    this.data.wordDuration += upgrade.wordDuration ? upgrade.wordDuration : 0;
+
+    // remove from array if not repurchasable
+    if (!this.state.shopUpgrades[i].repurchasable){
+      let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
+      newShop.splice(i, 1);
+      this.setState({shopUpgrades: newShop});
+    }
+  }
+
   render() {
     return (
       <div className="pirates">
@@ -102,11 +127,14 @@ class Pirates extends Component {
 
           { this.state.showShop && 
             <div id='shopWrapper' >
-              <div className='shopItem' >
-                <p>Title: Better Wood</p>
-                <p>Cost: 20 pts</p>
-                <p>Explanation: Increase your shield by 1</p>
-              </div>
+              { this.state.shopUpgrades.map( (item, i) => {
+                  return  <div key={i} className='shopItem' onClick={() => this.buyShopItem(i)} >
+                    <p> {item.title} </p>
+                    <p>Cost: {item.cost} pts</p>
+                    <p> {item.explanation} </p>
+                  </div>
+                })
+              }
             </div>
           }
 

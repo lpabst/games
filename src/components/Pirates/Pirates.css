@@ -87,6 +87,22 @@
     position: absolute;
     top: calc(50% - 300px);
     left: calc(50% - 200px);
+    z-index: 850;
+}
+
+.shopItem{
+    width: 96%;
+    min-height: 30px;
+    background: #88ff88;
+    border: 1px solid black;
+    padding: 5px 5px;
+    cursor: pointer;
+    margin: 5px auto;
+    box-shadow: 2px 2px 3px black;
+}
+
+.shopItem:active{
+    box-shadow: inset 2px 2px 3px black;
 }
 
 .instructions{

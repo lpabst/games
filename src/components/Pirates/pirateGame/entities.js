@@ -5,6 +5,7 @@ let entities = {
         console.log(this);
         this.health = health;
         this.shield = shield;
+        this.increasedDamage = 0;
     },
 
     Word: function(x, y, type) {

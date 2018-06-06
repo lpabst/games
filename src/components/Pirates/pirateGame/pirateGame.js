@@ -104,7 +104,7 @@ let pirateGame = {
     },
 
     checkForCompleteWord: pirateClass => {
-        let { wordsToType, typedWord } = pirateClass.data;
+        let { wordsToType, typedWord, ship } = pirateClass.data;
         // Finds the first word that matches what the user has typed so far and removes it from the list
         for (let i = wordsToType.length-1; i >= 0; i--){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
@@ -112,7 +112,7 @@ let pirateGame = {
                 if (wordsToType[i].type === 'cannonball'){
                     // score goes up & enemy ship takes damage
                     pirateClass.data.score ++;
-                    let damage = wordsToType[i].word.length - pirateClass.data.enemy.shield;
+                    let damage = wordsToType[i].word.length + ship.increasedDamage - pirateClass.data.enemy.shield;
                     pirateClass.data.enemy.health -= damage > 0 ? damage : 0;
 
                     // When destroying an enemy ship
@@ -144,7 +144,7 @@ let pirateGame = {
     },
 
     update: pirateClass => {
-        let { wordsToType, newWordFrequency, ship, canvas } = pirateClass.data;
+        let { wordsToType, newWordFrequency, ship, enemy, canvas } = pirateClass.data;
 
         // Every 60/80/100 frames (depending on difficulty), add a word to the user's array of words they need to type
         if (pirateClass.data.animationFrame % newWordFrequency === 0){
@@ -169,7 +169,7 @@ let pirateGame = {
             if (now - wordsToType[i].timeCreated >= pirateClass.data.wordDuration){
                 // If it's a cannonball, it causes damage equal to the length of the word
                 if (wordsToType[i] && wordsToType[i].type === 'cannonball'){
-                    let damage = wordsToType[i].word.length - ship.shield;
+                    let damage = wordsToType[i].word.length + enemy.increasedDamage - ship.shield;
                     pirateClass.data.ship.health -= ( damage > 0 ) ? damage : 0;
 
                     if (pirateClass.data.ship.health <= 0){
