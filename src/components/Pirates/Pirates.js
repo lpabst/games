@@ -84,19 +84,22 @@ class Pirates extends Component {
   buyShopItem(i){
     let upgrade = this.state.shopUpgrades[i];
     
-    // carry out effects
-    this.data.score -= upgrade.cost ? upgrade.cost : 0;
-    this.data.ship.health += upgrade.health ? upgrade.health : 0;
-    this.data.ship.increasedDamage += upgrade.damage ? upgrade.damage : 0;
-    this.data.ship.shield += upgrade.shield ? upgrade.shield : 0;
-    this.data.wordDuration += upgrade.wordDuration ? upgrade.wordDuration : 0;
+    if (upgrade.cost < this.data.score){
+      // carry out effects
+      this.data.score -= upgrade.cost ? upgrade.cost : 0;
+      this.data.ship.health += upgrade.health ? upgrade.health : 0;
+      this.data.ship.increasedDamage += upgrade.damage ? upgrade.damage : 0;
+      this.data.ship.shield += upgrade.shield ? upgrade.shield : 0;
+      this.data.wordDuration += upgrade.wordDuration ? upgrade.wordDuration : 0;
 
-    // remove from array if not repurchasable
-    if (!this.state.shopUpgrades[i].repurchasable){
-      let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
-      newShop.splice(i, 1);
-      this.setState({shopUpgrades: newShop});
+      // remove from array if not repurchasable
+      if (!this.state.shopUpgrades[i].repurchasable){
+        let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
+        newShop.splice(i, 1);
+        this.setState({shopUpgrades: newShop});
+      }
     }
+
   }
 
   render() {
@@ -129,13 +132,14 @@ class Pirates extends Component {
             <div id='shopWrapper' >
               <p className='shopHeader' >Note: Upgrades will take effect immediately after closing the shop</p>
               { this.state.shopUpgrades.map( (item, i) => {
-                  let background = (item.cost < this.data.score) ? '#88ff88' : '#ff8888';
 
-                  return  <div key={i} style={{background}} className='shopItem' onClick={() => this.buyShopItem(i)} >
+                  let background = (item.cost < this.data.score) ? '#88ff88' : '#ff8888';
+                  return  <div key={i} className='shopItem' onClick={() => this.buyShopItem(i)} >
                     <p> {item.title} </p>
-                    <p>Cost: {item.cost} pts</p>
+                    <p style={{background, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>
                     <p> {item.explanation} </p>
                   </div>
+
                 })
               }
             </div>

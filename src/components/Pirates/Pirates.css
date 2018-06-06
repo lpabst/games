@@ -100,11 +100,13 @@
 .shopItem{
     width: 96%;
     min-height: 30px;
+    background: #88ff88;
     border: 1px solid black;
     padding: 5px 5px;
     cursor: pointer;
-    margin: 5px auto;
+    margin: 8px auto;
     box-shadow: 2px 2px 3px black;
+    user-select: none;
 }
 
 .shopItem:active{
