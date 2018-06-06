@@ -1,7 +1,8 @@
+import axios from 'axios';
 import entities from './entities';
 
 let pirateGame = {
-    init: (difficulty) => {
+    init: (difficulty, pirateClass) => {
         let difficultyMapping = {
             // difficulty: [health, shield, wordDuration, newWordFrequency]
             'Easy': [150, 2, 5000, 100],
@@ -29,7 +30,7 @@ let pirateGame = {
         let enemy = new entities.Ship(50, 3);
         let shipsDestroyed = 0;
 
-        var data = { canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, newWordFrequency, score, ship, enemy, shipsDestroyed };
+        var data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, newWordFrequency, score, ship, enemy, shipsDestroyed };
 
         window.addEventListener('keydown', function(e) { 
             pirateGame.handleInput(e, data) 
@@ -69,7 +70,7 @@ let pirateGame = {
     handleInput: (e, data) => {
         if (data.gameOver) return;
 
-        // right arrow pauses game and opens shop for purhcasing upgrades
+        // right arrow pauses game and opens shop for purchasing upgrades
         if(e.keyCode === 39) {
             e.preventDefault();
             pirateGame.togglePauseGame(data);
@@ -227,13 +228,14 @@ let pirateGame = {
 
         // Send score to back end
         let name = document.getElementById('username').value || 'anonymous' 
-        // $.post('/api/newHighScore', {
-        //     name: name,
-        //     score: data.score
-        // })
-        // .done( res => {
-        //     window.getHighScores();
-        // })
+        axios.post('/api/newPiratesHighScore', {
+            name: name,
+            score: data.score
+        })
+        .then( res => {
+            data.reactClass.getPiratesHighScores();
+            // window.getHighScores();
+        })
     },
 }
 

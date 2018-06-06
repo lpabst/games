@@ -17,9 +17,15 @@ class Pirates extends Component {
         hard: []
       }
     }
+
+    this.getPiratesHighScores = this.getPiratesHighScores.bind(this);
   }
 
   componentDidMount(){
+    this.getPiratesHighScores();
+  }
+
+  getPiratesHighScores(){
     axios.get('/api/getPiratesHighScores')
     .then( res => {
       console.log(res);
@@ -27,7 +33,8 @@ class Pirates extends Component {
   }
 
   startNewGame(){
-    pirateGame.init(this.state.difficulty);
+    // Pass this as a param so the other file can set state
+    pirateGame.init(this.state.difficulty, this);
   }
 
   toggleShowHighScores(){
