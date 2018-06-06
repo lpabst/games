@@ -42,6 +42,10 @@
     box-shadow: inset 2px 2px 3px black;
 }
 
+#toggleShop{
+    visibility: hidden;
+}
+
 .canvasWrapper{
     width: 600px;
     height: 620px;
@@ -81,8 +85,8 @@
     background: #ccc;
     color: black;
     position: absolute;
-    right: -400px;
     top: calc(50% - 300px);
+    left: calc(50% - 200px);
 }
 
 .instructions{

@@ -10,6 +10,7 @@ class Pirates extends Component {
     this.state = {
       username: '',
       showHighScores: false,
+      showShop: false,
       difficulty: 'Easy',
       highScores: {
         easy: [],
@@ -42,6 +43,12 @@ class Pirates extends Component {
     this.setState({showHighScores});
   }
 
+  toggleShop(){
+    this.setState({
+      showShop: !this.state.showShop
+    })
+  }
+
   render() {
     return (
       <div className="pirates">
@@ -59,6 +66,7 @@ class Pirates extends Component {
             </select>
             <div className='btn' id="startBtn" onClick={() => this.startNewGame()} > New Game </div>
             <div className='btn' id="highScoresBtn" onClick={() => this.toggleShowHighScores()} > High Scores </div>
+            <div className='btn' id='toggleShop'> Shop </div>
           </div>
 
           <div className='canvasWrapper'>
@@ -67,13 +75,15 @@ class Pirates extends Component {
             <div id='typedWord' ></div>
           </div>
 
-          <div id='shopWrapper' >
-            <div className='shopItem' >
-              <p>Title: Better Wood</p>
-              <p>Cost: 20 pts</p>
-              <p>Explanation: Increase your shield by 1</p>
+          { this.state.showShop && 
+            <div id='shopWrapper' >
+              <div className='shopItem' >
+                <p>Title: Better Wood</p>
+                <p>Cost: 20 pts</p>
+                <p>Explanation: Increase your shield by 1</p>
+              </div>
             </div>
-          </div>
+          }
 
           <ul className='instructions'>
             <li>You are the captain of a ship being attacked by pirates! Your ship starts with 100 health and a shield/hull thickness of 2</li>
@@ -83,7 +93,8 @@ class Pirates extends Component {
             <li>The damage a word causes is equal to the length of the word, minus the shield of the ship being attacked. So a 7 letter word hitting a ship with 2 shield would cause 5 damage</li>
             <li>You can see what you have typed right above the game board</li>
             <li>Hitting Enter will clear what you've already typed, Backspace and Delete remove 1 letter from the end of what you've typed</li>
-            <li>*Optionally, you can spend your hard earned points on upgrades in the upgrades menu. Opening the upgrade menu will also pause the game</li>
+            <li>*Optionally, you can spend your hard earned points on upgrades in the shop. Opening the upgrade menu will also pause the game</li>
+            <li>Toggle the shop by pressing the right arrow, OR clicking the shop button above the game board</li>
           </ul>
 
           { this.state.showHighScores &&

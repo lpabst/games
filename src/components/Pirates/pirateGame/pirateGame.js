@@ -32,6 +32,11 @@ let pirateGame = {
 
         var data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, newWordFrequency, score, ship, enemy, shipsDestroyed };
 
+        document.getElementById('toggleShop').style.visibility = 'visible';
+        document.getElementById('toggleShop').addEventListener('click', function(){
+            pirateGame.togglePauseGame(data);
+            data.pirateClass.toggleShop();
+        })
         window.addEventListener('keydown', function(e) { 
             pirateGame.handleInput(e, data) 
         });
@@ -74,6 +79,7 @@ let pirateGame = {
         if(e.keyCode === 39) {
             e.preventDefault();
             pirateGame.togglePauseGame(data);
+            data.pirateClass.toggleShop();
         }
         
         // backspace and delete should both remove most recently typed letter
@@ -212,10 +218,11 @@ let pirateGame = {
     },
     
     gameOver: data => {
+        let { context, score } = data;
+
         pirateGame.render(data);
 
         // game over text
-        let context = data.context;
         context.fillStyle = 'white';
         context.font = '42px Arial';
         context.fillText('Game Over', 200, 300);
@@ -225,16 +232,13 @@ let pirateGame = {
         }
         
         document.querySelectorAll('.btn').forEach( btn => btn.style.visibility = 'visible');
+        document.getElementById('toggleShop').style.visibility = 'hidden';
 
         // Send score to back end
         let name = document.getElementById('username').value || 'anonymous' 
-        axios.post('/api/newPiratesHighScore', {
-            name: name,
-            score: data.score
-        })
+        axios.post('/api/newPiratesHighScore', {name, score})
         .then( res => {
-            data.reactClass.getPiratesHighScores();
-            // window.getHighScores();
+            data.pirateClass.getPiratesHighScores();
         })
     },
 }
