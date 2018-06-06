@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import './Pirates.css';
 
 import pirateGame from './pirateGame/pirateGame.js';
@@ -10,7 +10,20 @@ class Pirates extends Component {
     this.state = {
       username: '',
       showHighScores: false,
+      difficulty: 'Easy',
+      highScores: {
+        easy: [],
+        medium: [],
+        hard: []
+      }
     }
+  }
+
+  componentDidMount(){
+    axios.get('/api/getHighScores')
+    .then( res => {
+      console.log(res);
+    })
   }
 
   startNewGame(){
@@ -31,6 +44,12 @@ class Pirates extends Component {
           <div className='controls' >
             <p id='usernameDisplay'>Username: {this.state.username}</p>
             <input id='username' placeholder="Type Your Name" onChange={(e) => this.setState({username: e.target.value})} value={this.state.username} />
+            <p>Difficulty</p>
+            <select value={this.state.difficulty} onChange={(e) => this.setState({difficulty: e.target.value})} >
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+            </select>
             <div className='btn' id="startBtn" onClick={() => this.startNewGame()} > New Game </div>
             <div className='btn' id="highScoresBtn" onClick={() => this.toggleShowHighScores()} > High Scores </div>
           </div>

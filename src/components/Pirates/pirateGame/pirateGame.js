@@ -147,14 +147,18 @@ let pirateGame = {
         // Any word that has been up for longer than 5 seconds disappears
         let now = new Date().getTime();
         for (let i = wordsToType.length-1; i >= 0; i--){
-            if (now - wordsToType[i].timeCreated >= 5000){
-                wordsToType.splice(i, 1);
-
+            if (now - wordsToType[i].timeCreated >= 3000){
                 // If it's a cannonball, it causes damage equal to the length of the word
                 if (wordsToType[i] && wordsToType[i].type === 'cannonball'){
                     let damage = wordsToType[i].word.length - ship.shield;
                     data.ship.health -= ( damage > 0 ) ? damage : 0;
+
+                    if (data.ship.health <= 0){
+                        data.gameOver = true;
+                    }
                 }
+                
+                wordsToType.splice(i, 1);
             }
         }
         

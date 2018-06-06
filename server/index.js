@@ -24,10 +24,10 @@ massive(config.connection)
 
 app.use(express.static(__dirname + './../build'))
 
-var userController = require("./userController.js");
+var piratesController = require("./userController.js");
 
 //////////Endpoints for the front end
-
+app.get('/api/getPiratesHighScores', piratesController.getPiratesHighScores);
 
 
 
