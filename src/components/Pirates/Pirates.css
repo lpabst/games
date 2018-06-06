@@ -105,7 +105,6 @@
     overflow: scroll;
     background: #ddd;
     padding-top: 100px;
-    display: none;
     z-index: 200;
 }
 

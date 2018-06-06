@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import entities from './entities';
 
 let pirateGame = {
@@ -235,11 +235,7 @@ let pirateGame = {
         document.getElementById('toggleShop').style.visibility = 'hidden';
 
         // Send score to back end
-        let name = document.getElementById('username').value || 'anonymous' 
-        axios.post('/api/newPiratesHighScore', {name, score})
-        .then( res => {
-            data.pirateClass.getPiratesHighScores();
-        })
+        data.pirateClass.newPiratesHighScore(score);
     },
 }
 

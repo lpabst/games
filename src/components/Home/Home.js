@@ -31,7 +31,7 @@ class Home extends Component {
                 </div>
 
                 <div className='pressStartWrapper' >
-                    <img src={pressStart} />
+                    <img src={pressStart} alt={"arcade game screen"} />
                     <p>Select a game in the header to start playing!!!</p>
                 </div>
 

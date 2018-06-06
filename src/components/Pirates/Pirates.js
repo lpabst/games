@@ -20,6 +20,7 @@ class Pirates extends Component {
     }
 
     this.getPiratesHighScores = this.getPiratesHighScores.bind(this);
+    this.newPiratesHighScore = this.newPiratesHighScore.bind(this);
   }
 
   componentDidMount(){
@@ -29,7 +30,29 @@ class Pirates extends Component {
   getPiratesHighScores(){
     axios.get('/api/getPiratesHighScores')
     .then( res => {
+      if (!res || !res.data) return;
+
+      let highScores = {
+        easy: res.data.easy,
+        medium: res.data.medium,
+        hard: res.data.hard
+      }
+
+      this.setState({highScores});
+    })
+  }
+
+  newPiratesHighScore(score){
+    axios.post('/api/newPiratesHighScore', {
+      name: this.state.username,
+      score: score || 0,
+      difficulty: this.state.difficulty
+    })
+    .then (res => {
       console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
     })
   }
 
@@ -102,7 +125,14 @@ class Pirates extends Component {
               <div className='closeX' onClick={() => this.toggleShowHighScores()} > x </div>
               <table id='highScoresTable'>
                 <tbody id='highScoresTableBody'> 
-                  {/* High Score data goes here */} 
+                  {
+                    this.state.highScores.easy.map( (item, i) => {
+                      return <tr key={i} >
+                        <td>Score: {item.score}</td>
+                        <td>Name: {item.name}</td>
+                      </tr>
+                    })
+                  }
                 </tbody>
               </table>
             </div>
