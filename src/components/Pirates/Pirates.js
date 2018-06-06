@@ -127,8 +127,11 @@ class Pirates extends Component {
 
           { this.state.showShop && 
             <div id='shopWrapper' >
+              <p className='shopHeader' >Note: Upgrades will take effect immediately after closing the shop</p>
               { this.state.shopUpgrades.map( (item, i) => {
-                  return  <div key={i} className='shopItem' onClick={() => this.buyShopItem(i)} >
+                  let background = (item.cost < this.data.score) ? '#88ff88' : '#ff8888';
+
+                  return  <div key={i} style={{background}} className='shopItem' onClick={() => this.buyShopItem(i)} >
                     <p> {item.title} </p>
                     <p>Cost: {item.cost} pts</p>
                     <p> {item.explanation} </p>

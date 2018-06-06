@@ -78,22 +78,28 @@
 }
 
 #shopWrapper{
-    width: 400px;
-    height: 400px;
+    width: 600px;
+    height: 600px;
     overflow: scroll;
     border: 1px solid black;
     background: #ccc;
     color: black;
     position: absolute;
-    top: calc(50% - 300px);
-    left: calc(50% - 200px);
+    top: calc(50% - 420px);
+    left: calc(50% - 300px);
     z-index: 850;
+}
+
+.shopHeader{
+    width: 96%;
+    min-height: 30px;
+    padding: 5px;
+    font-weight: bold;
 }
 
 .shopItem{
     width: 96%;
     min-height: 30px;
-    background: #88ff88;
     border: 1px solid black;
     padding: 5px 5px;
     cursor: pointer;
