@@ -21,8 +21,13 @@ class Pirates extends Component {
       shopUpgrades: [
         { title: 'Better Wood!', explanation: 'Increase your shield by 1', repurchasable: false, cost: 20, shield: 1 },
         { title: 'Bigger Cannons!', explanation: 'Increase your damage by 1', repurchasable: false, cost: 20, damage: 1 },
-        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: true, cost: 20, health: 30 },
+        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: false, cost: 30, health: 30 },
         { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 50, wordDuration: 500},
+        { title: 'Metal Hull!', explanation: 'Increase your shield by 1', repurchasable: false, cost: 200, shield: 1 },
+        { title: 'More Cannons!', explanation: 'Increase your damage by 1', repurchasable: false, cost: 200, damage: 1 },
+        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: false, cost: 300, health: 30 },
+        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 500, wordDuration: 500},
+        { title: 'Big Head (Risky)', explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5', repurchasable: false, cost: 0, damage: 1, enemyDamage: 5},
       ]
     }
 
@@ -91,6 +96,7 @@ class Pirates extends Component {
       this.data.ship.increasedDamage += upgrade.damage ? upgrade.damage : 0;
       this.data.ship.shield += upgrade.shield ? upgrade.shield : 0;
       this.data.wordDuration += upgrade.wordDuration ? upgrade.wordDuration : 0;
+      this.data.enemy.increasedDamage += upgrade.enemyDamage ? upgrade.enemyDamage : 0;
 
       // remove from array if not repurchasable
       if (!this.state.shopUpgrades[i].repurchasable){
