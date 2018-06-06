@@ -97,6 +97,9 @@ class Pirates extends Component {
         let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
         newShop.splice(i, 1);
         this.setState({shopUpgrades: newShop});
+      }else{
+        // if it is repurchasable, refresh the DOM so that the score/health update
+        this.forceUpdate();
       }
     }
 
@@ -130,7 +133,13 @@ class Pirates extends Component {
 
           { this.state.showShop && 
             <div id='shopWrapper' >
-              <p className='shopHeader' >Note: Upgrades will take effect immediately after closing the shop</p>
+              <p className='shopHeader' >**Note - Your score is your currency, so spend it wisely**</p>
+              <p className='shopHeader' >Score: {this.data.score} pts</p>
+              <p className='shopHeader' >Health: {this.data.ship.health}</p>
+              <p className='shopHeader' >Shield: {this.data.ship.shield}</p>
+              <p className='shopHeader' >Addt'l Damage: {this.data.ship.increasedDamage}</p>
+              <br />
+
               { this.state.shopUpgrades.map( (item, i) => {
 
                   let background = (item.cost < this.data.score) ? '#88ff88' : '#ff8888';

@@ -84,6 +84,7 @@
     border: 1px solid black;
     background: #ccc;
     color: black;
+    padding: 10px 0px;
     position: absolute;
     top: calc(50% - 420px);
     left: calc(50% - 300px);
@@ -92,8 +93,7 @@
 
 .shopHeader{
     width: 96%;
-    min-height: 30px;
-    padding: 5px;
+    padding: 3px 0px 3px 2%;
     font-weight: bold;
 }
 
