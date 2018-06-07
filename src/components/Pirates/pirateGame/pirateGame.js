@@ -148,16 +148,16 @@ let pirateGame = {
 
         // Every 60/80/100 frames (depending on difficulty), add a word to the user's array of words they need to type
         if (pirateClass.data.animationFrame % newWordFrequency === 0){
-            let randX = Math.floor(Math.random() * (canvas.width-150)) + 50;
-            let randY = Math.floor(Math.random() * (canvas.height-100)) + 85;
+            let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
+            let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
             let newWord = new entities.Word(randX, randY, 'cannonball');
             wordsToType.push(newWord);
 
             // Every now and then randomly add a repair word to the array as well
             let randomChance = Math.floor(Math.random() * 100);
             if (randomChance <= 2){
-                let randX = Math.floor(Math.random() * (canvas.width-150)) + 50;
-                let randY = Math.floor(Math.random() * (canvas.height-100)) + 85;
+                let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
+                let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
                 let newWord = new entities.Word(randX, randY, 'repair');
                 wordsToType.push(newWord);
             }
@@ -198,7 +198,7 @@ let pirateGame = {
         context.fillText('Shield: ' + ship.shield, 10, 75);
 
         // Words to type
-        context.font = '14px Arial';
+        context.font = '20px Arial';
         wordsToType.forEach( obj => {
             if (obj.type === 'repair'){
                 context.fillStyle = 'green';
