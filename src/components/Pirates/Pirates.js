@@ -29,6 +29,7 @@ class Pirates extends Component {
         { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 500, wordDuration: 500},
         { title: 'Big Head (Risky)', explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5', repurchasable: true, cost: 0, damage: 1, enemyDamage: 5},
         { title: 'More Ammo For Everyone! (Risky)', explanation: 'Words appear more often', repurchasable: true, cost: 0, newWordFrequency: -1},
+        { title: 'Bribe the Judge!', explanation: '1 extra point per word typed', repurchasable: false, cost: 100, scoreIncrementer: 1 },
       ]
     }
 
@@ -90,7 +91,7 @@ class Pirates extends Component {
   buyShopItem(i){
     let upgrade = this.state.shopUpgrades[i];
     
-    if (upgrade.cost < this.data.score){
+    if (upgrade.cost <= this.data.score){
       // carry out effects
       this.data.score -= upgrade.cost ? upgrade.cost : 0;
       this.data.ship.health += upgrade.health ? upgrade.health : 0;
@@ -99,6 +100,7 @@ class Pirates extends Component {
       this.data.wordDuration += upgrade.wordDuration ? upgrade.wordDuration : 0;
       this.data.newWordFrequency += upgrade.newWordFrequency ? upgrade.newWordFrequency : 0;
       this.data.enemy.increasedDamage += upgrade.enemyDamage ? upgrade.enemyDamage : 0;
+      this.data.scoreIncrementer += upgrade.scoreIncrementer ? upgrade.scoreIncrementer : 0;
 
       // remove from array if not repurchasable
       if (!this.state.shopUpgrades[i].repurchasable){
@@ -150,7 +152,7 @@ class Pirates extends Component {
 
               { this.state.shopUpgrades.map( (item, i) => {
 
-                  let background = (item.cost < this.data.score) ? '#88ff88' : '#ff8888';
+                  let background = (item.cost <= this.data.score) ? '#88ff88' : '#ff8888';
                   return  <div key={i} className='shopItem' onClick={() => this.buyShopItem(i)} >
                     <p> {item.title} </p>
                     <p style={{background, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>

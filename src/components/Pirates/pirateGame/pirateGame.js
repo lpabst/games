@@ -22,6 +22,7 @@ let pirateGame = {
         let wordsToType = [];
         let typedWord = '';
         let score = 0;
+        let scoreIncrementer = 1;
         let health = difficultyMapping[difficulty][0];
         let shield = difficultyMapping[difficulty][1];
         let wordDuration = difficultyMapping[difficulty][2];
@@ -30,7 +31,7 @@ let pirateGame = {
         let enemy = new entities.Ship(50, 3);
         let shipsDestroyed = 0;
 
-        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, newWordFrequency, score, ship, enemy, shipsDestroyed };
+        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, scoreIncrementer, wordDuration, newWordFrequency, ship, enemy, shipsDestroyed };
 
         document.getElementById('toggleShop').style.visibility = 'visible';
         document.getElementById('toggleShop').addEventListener('click', function(){
@@ -104,14 +105,14 @@ let pirateGame = {
     },
 
     checkForCompleteWord: pirateClass => {
-        let { wordsToType, typedWord, ship } = pirateClass.data;
+        let { wordsToType, typedWord, ship, scoreIncrementer } = pirateClass.data;
         // Finds the first word that matches what the user has typed so far and removes it from the list
         for (let i = wordsToType.length-1; i >= 0; i--){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
 
                 if (wordsToType[i].type === 'cannonball'){
                     // score goes up & enemy ship takes damage
-                    pirateClass.data.score ++;
+                    pirateClass.data.score += scoreIncrementer;
                     let damage = wordsToType[i].word.length + ship.increasedDamage - pirateClass.data.enemy.shield;
                     pirateClass.data.enemy.health -= damage > 0 ? damage : 0;
 
