@@ -22,6 +22,7 @@ let pirateGame = {
         let wordsToType = [];
         let typedWord = '';
         let score = 0;
+        let scoreIncrementer = 1;
         let health = difficultyMapping[difficulty][0];
         let shield = difficultyMapping[difficulty][1];
         let wordDuration = difficultyMapping[difficulty][2];
@@ -30,7 +31,7 @@ let pirateGame = {
         let enemy = new entities.Ship(50, 3);
         let shipsDestroyed = 0;
 
-        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, wordDuration, newWordFrequency, score, ship, enemy, shipsDestroyed };
+        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, scoreIncrementer, wordDuration, newWordFrequency, ship, enemy, shipsDestroyed };
 
         document.getElementById('toggleShop').style.visibility = 'visible';
         document.getElementById('toggleShop').addEventListener('click', function(){
@@ -104,14 +105,14 @@ let pirateGame = {
     },
 
     checkForCompleteWord: pirateClass => {
-        let { wordsToType, typedWord, ship } = pirateClass.data;
+        let { wordsToType, typedWord, ship, scoreIncrementer } = pirateClass.data;
         // Finds the first word that matches what the user has typed so far and removes it from the list
         for (let i = wordsToType.length-1; i >= 0; i--){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
 
                 if (wordsToType[i].type === 'cannonball'){
                     // score goes up & enemy ship takes damage
-                    pirateClass.data.score ++;
+                    pirateClass.data.score += scoreIncrementer;
                     let damage = wordsToType[i].word.length + ship.increasedDamage - pirateClass.data.enemy.shield;
                     pirateClass.data.enemy.health -= damage > 0 ? damage : 0;
 
@@ -148,16 +149,16 @@ let pirateGame = {
 
         // Every 60/80/100 frames (depending on difficulty), add a word to the user's array of words they need to type
         if (pirateClass.data.animationFrame % newWordFrequency === 0){
-            let randX = Math.floor(Math.random() * (canvas.width-150)) + 50;
-            let randY = Math.floor(Math.random() * (canvas.height-100)) + 85;
+            let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
+            let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
             let newWord = new entities.Word(randX, randY, 'cannonball');
             wordsToType.push(newWord);
 
             // Every now and then randomly add a repair word to the array as well
             let randomChance = Math.floor(Math.random() * 100);
             if (randomChance <= 2){
-                let randX = Math.floor(Math.random() * (canvas.width-150)) + 50;
-                let randY = Math.floor(Math.random() * (canvas.height-100)) + 85;
+                let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
+                let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
                 let newWord = new entities.Word(randX, randY, 'repair');
                 wordsToType.push(newWord);
             }
@@ -198,7 +199,7 @@ let pirateGame = {
         context.fillText('Shield: ' + ship.shield, 10, 75);
 
         // Words to type
-        context.font = '14px Arial';
+        context.font = '20px Arial';
         wordsToType.forEach( obj => {
             if (obj.type === 'repair'){
                 context.fillStyle = 'green';
