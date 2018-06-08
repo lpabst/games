@@ -30,8 +30,9 @@ class Pirates extends Component {
         { title: 'Bribe the Judge\'s Boss!', explanation: '3 extra points per word typed', quantity: 2, addToUpgradeCost: 500, cost: 1000, scoreIncrementer: 3 },
         
         { title: 'Sell a Cannon!', risky: true, explanation: 'Decrease your damage by 1, get 100 pts', quantity: 1, cost: -100, damage: -1 },
-        { title: 'Big Head!', risky: true, explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5. You also earn 1 extra point per word typed.', quantity: 100, addToUpgradeCost: 1, cost: 1, damage: 1, enemyDamage: 5, scoreIncrementer: 1},
+        { title: 'Big Head!', risky: true, explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5. You also earn 1 extra point per word typed.', quantity: 50, addToUpgradeCost: 3, cost: 3, damage: 1, enemyDamage: 5, scoreIncrementer: 1},
         { title: 'More Ammo For Everyone!', risky: true, explanation: 'Words appear more often', quantity: 2, cost: 10, newWordFrequency: -5},
+        { title: 'Protect The Enemy!', risky: true, explanation: 'Increase your enemy\'s shield by 5', quantity: 3, multiplyUpgradeCost: 2.5, cost: 40, enemyShield: 5 },
         { title: 'Invest in Cannonballs!', risky: true, explanation: '1 extra point per word typed, 100 less points per enemy ship destroyed', quantity: 1, cost: 100, shipScoreIncrementer: -100, scoreIncrementer: 1 },
         { title: 'Invest in Lumber!', risky: true, explanation: '1 less point per word typed, 500 extra points per enemy ship destroyed', quantity: 1, cost: 600, shipScoreIncrementer: 500, scoreIncrementer: -1 },
       ]
@@ -103,6 +104,7 @@ class Pirates extends Component {
       this.data.wordDuration += upgrade.wordDuration ? upgrade.wordDuration : 0;
       this.data.newWordFrequency += upgrade.newWordFrequency ? upgrade.newWordFrequency : 0;
       this.data.enemy.increasedDamage += upgrade.enemyDamage ? upgrade.enemyDamage : 0;
+      this.data.enemy.shield += upgrade.enemyShield ? upgrade.enemyShield : 0;
       this.data.scoreIncrementer += upgrade.scoreIncrementer ? upgrade.scoreIncrementer : 0;
       this.data.scoreIncrementer *= upgrade.multiplyScoreIncrementer ? upgrade.multiplyScoreIncrementer : 1;
       this.data.shipScoreIncrementer += upgrade.shipScoreIncrementer ? upgrade.shipScoreIncrementer : 0;
