@@ -65,9 +65,21 @@ let pirateGame = {
 
     togglePauseGame: pirateClass => {
         if (pirateClass.data.gameRunning){
-            document.getElementById('messageDiv').innerText = 'Paused. Press Left arrow to continue.';
+            // Check how much time has elapsed for each word on the screen
+            let now = new Date().getTime();
+            pirateClass.data.wordsToType.forEach( obj => {
+                obj.timeElapsed = now - obj.timeCreated;
+            })
+
             pirateClass.data.gameRunning = false;
         }else{
+            // Update the 'timeCreated' of each word to reflect how much time has elapsed. 
+            // This effectively pauses the game while in the shop
+            let now = new Date().getTime();
+            pirateClass.data.wordsToType.forEach( obj => {
+                obj.timeCreated = now - obj.timeElapsed;
+            })
+
             document.getElementById('messageDiv').innerText = '';
             pirateClass.data.gameRunning = true;
         }
