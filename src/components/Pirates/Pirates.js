@@ -153,26 +153,29 @@ class Pirates extends Component {
 
           { this.state.showShop && 
             <div id='shopWrapper' >
-              <p className='shopHeader' >**Note - Your score is your currency, so spend it wisely**</p>
-              <p className='shopHeader' >Score: {this.data.score} pts</p>
-              <p className='shopHeader' >Health: {this.data.ship.health}</p>
-              <p className='shopHeader' >Shield: {this.data.ship.shield}</p>
-              <p className='shopHeader' >Addt'l Damage: {this.data.ship.increasedDamage}</p>
-              <br />
+              <div className='shopInfo'>
+                <p className='shopHeader' >**Note - Your score is your currency, so spend it wisely**</p>
+                <p className='shopHeader' >Score: {this.data.score} pts</p>
+                <p className='shopHeader' >Health: {this.data.ship.health}</p>
+                <p className='shopHeader' >Shield: {this.data.ship.shield}</p>
+                <p className='shopHeader' >Addt'l Damage: {this.data.ship.increasedDamage}</p>
+              </div>
 
-              { this.state.shopUpgrades.map( (item, i) => {
+              <div className='shopItems'>
+                { this.state.shopUpgrades.map( (item, i) => {
 
-                  let itemBackground = item.risky ? '#f9ca20' : '#88ff88';
-                  let costBackground = (item.cost <= this.data.score) ? itemBackground : '#ff8888';
+                    let itemBackground = item.risky ? '#f9ca20' : '#88ff88';
+                    let costBackground = (item.cost <= this.data.score) ? itemBackground : '#ff8888';
 
-                  return  <div key={i} style={{background: itemBackground}} className='shopItem' onClick={() => this.buyShopItem(i)} >
-                    <p> {item.title} ({item.quantity} left) </p>
-                    <p style={{background: costBackground, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>
-                    <p> {item.explanation} </p>
-                  </div>
+                    return  <div key={i} style={{background: itemBackground}} className='shopItem' onClick={() => this.buyShopItem(i)} >
+                      <p> {item.title} ({item.quantity} left) </p>
+                      <p style={{background: costBackground, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>
+                      <p> {item.explanation} </p>
+                    </div>
 
-                })
-              }
+                  })
+                }
+              </div>
             </div>
           }
 

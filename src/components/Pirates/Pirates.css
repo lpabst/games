@@ -80,7 +80,6 @@
 #shopWrapper{
     width: 600px;
     height: 600px;
-    overflow: scroll;
     border: 1px solid black;
     background: #ccc;
     color: black;
@@ -91,10 +90,22 @@
     z-index: 850;
 }
 
+.shopInfo{
+    width: 100%;
+    height: 120px;
+    z-index: 855;
+}
+
 .shopHeader{
     width: 96%;
     padding: 3px 0px 3px 2%;
     font-weight: bold;
+}
+
+.shopItems{
+    width: 100%;
+    height: 480px;
+    overflow: scroll;
 }
 
 .shopItem{
