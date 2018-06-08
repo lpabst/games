@@ -38,9 +38,12 @@ let pirateGame = {
             pirateGame.togglePauseGame(pirateClass);
             pirateClass.toggleShop();
         })
-        window.addEventListener('keydown', function(e) { 
-            pirateGame.handleInput(e, pirateClass) 
-        });
+
+        // Add keydown event listener
+        pirateClass.data.keydownListener = function(e){
+            pirateGame.handleInput(e, pirateClass);
+        }
+        window.addEventListener('keydown', pirateClass.data.keydownListener);
 
         pirateGame.run(pirateClass);
     },
@@ -88,9 +91,13 @@ let pirateGame = {
     handleInput: (e, pirateClass) => {
         if (pirateClass.data.gameOver) return;
 
+        // Arrows shouldn't scroll the screen
+        if (e.keyCode >= 37 && e.keyCode <= 40){
+            e.preventDefault();
+        }
+
         // right arrow pauses game and opens shop for purchasing upgrades
         if(e.keyCode === 39) {
-            e.preventDefault();
             pirateGame.togglePauseGame(pirateClass);
             pirateClass.toggleShop();
         }
@@ -246,6 +253,9 @@ let pirateGame = {
         
         document.querySelectorAll('.btn').forEach( btn => btn.style.visibility = 'visible');
         document.getElementById('toggleShop').style.visibility = 'hidden';
+
+        // remove keydown event listener
+        window.removeEventListener('keydown', pirateClass.data.keydownListener);
 
         // Send score to back end
         pirateClass.newPiratesHighScore(score);
