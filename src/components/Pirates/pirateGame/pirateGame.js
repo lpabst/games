@@ -23,6 +23,7 @@ let pirateGame = {
         let typedWord = '';
         let score = 0;
         let scoreIncrementer = 1;
+        let shipScoreIncrementer = 100;
         let health = difficultyMapping[difficulty][0];
         let shield = difficultyMapping[difficulty][1];
         let wordDuration = difficultyMapping[difficulty][2];
@@ -124,7 +125,7 @@ let pirateGame = {
     },
 
     checkForCompleteWord: pirateClass => {
-        let { wordsToType, typedWord, ship, scoreIncrementer } = pirateClass.data;
+        let { wordsToType, typedWord, ship, scoreIncrementer, shipScoreIncrementer } = pirateClass.data;
         // Finds the first word that matches what the user has typed so far and removes it from the list
         for (let i = 0; i < wordsToType.length; i++){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
@@ -138,7 +139,7 @@ let pirateGame = {
                     // When destroying an enemy ship
                     if (pirateClass.data.enemy.health <= 0){
                         // Additional points
-                        pirateClass.data.score += 100;
+                        pirateClass.data.score += shipScoreIncrementer;
                         pirateClass.data.shipsDestroyed ++;
 
                         // Create a new enemy

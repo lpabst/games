@@ -25,6 +25,7 @@ class Pirates extends Component {
         { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', quantity: 5, multiplyUpgradeCost: 10, cost: 50, wordDuration: 500},
         { title: 'Less Ammo For Everyone!', explanation: 'Words appear less often', quantity: 2, cost: 100, addToUpgradeCost: 100, newWordFrequency: 5},
         { title: 'Bribe the Judge!', explanation: '1 extra point per word typed', quantity: 2, addToUpgradeCost: 10, cost: 100, scoreIncrementer: 1 },
+        { title: 'New Business Partner!', explanation: '100 extra points per enemy ship destroyed', quantity: 2, addToUpgradeCost: 100, cost: 150, shipScoreIncrementer: 1 },
         
         { title: 'Sell a Cannon!', risky: true, explanation: 'Decrease your damage by 1, get 100 pts', quantity: 1, cost: -100, damage: -1 },
         { title: 'More Ammo For Everyone!', risky: true, explanation: 'Words appear more often', quantity: 2, cost: 10, newWordFrequency: -5},
@@ -100,6 +101,7 @@ class Pirates extends Component {
       this.data.newWordFrequency += upgrade.newWordFrequency ? upgrade.newWordFrequency : 0;
       this.data.enemy.increasedDamage += upgrade.enemyDamage ? upgrade.enemyDamage : 0;
       this.data.scoreIncrementer += upgrade.scoreIncrementer ? upgrade.scoreIncrementer : 0;
+      this.data.shipScoreIncrementer += upgrade.shipScoreIncrementer ? upgrade.shipScoreIncrementer : 0;
 
       console.log(this.data.newWordFrequency);
 
