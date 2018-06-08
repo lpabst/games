@@ -32,7 +32,7 @@ let pirateGame = {
         let enemy = new entities.Ship(50, 3);
         let shipsDestroyed = 0;
 
-        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, scoreIncrementer, wordDuration, newWordFrequency, ship, enemy, shipsDestroyed };
+        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, scoreIncrementer, shipScoreIncrementer, wordDuration, newWordFrequency, ship, enemy, shipsDestroyed };
 
         document.getElementById('toggleShop').style.visibility = 'visible';
         document.getElementById('toggleShop').addEventListener('click', function(){
@@ -142,14 +142,16 @@ let pirateGame = {
                         pirateClass.data.score += shipScoreIncrementer;
                         pirateClass.data.shipsDestroyed ++;
 
-                        // Create a new enemy
-                        let newEnemyHealth = (60 * pirateClass.data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
-                        let newEnemyShield = Math.floor(Math.random() * 5) + 1
-                        pirateClass.data.enemy = new entities.Ship(newEnemyHealth, newEnemyShield);
+                        // "Create" a new enemy by updating the enemy's health/shield/increasedDamage
+                        let newEnemyHealth = (20 * pirateClass.data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
+                        let newEnemyShield = Math.floor(Math.random() * 5) + 1;
+                        pirateClass.data.enemy.health = newEnemyHealth;
+                        pirateClass.data.enemy.shield = newEnemyShield;
+                        pirateClass.data.enemy.increasedDamage++;
 
                         // things get harder (max out at 1500ms word duration and a new word every 50 animationFrames)
                         pirateClass.data.wordDuration -= 100;
-                        pirateClass.data.newWordFrequency -= 1;
+                        pirateClass.data.newWordFrequency -= 2;
                     }
                 }else{
                     pirateClass.data.ship.health += 2;

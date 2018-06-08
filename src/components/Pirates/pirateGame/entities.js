@@ -1,11 +1,11 @@
 import words from './words';
 
 let entities = {
-    Ship: function(health, shield) {
+    Ship: function(health, shield, increasedDamage) {
         console.log(this);
         this.health = health;
         this.shield = shield;
-        this.increasedDamage = 0;
+        this.increasedDamage = increasedDamage || 0;
     },
 
     Word: function(x, y, type) {
