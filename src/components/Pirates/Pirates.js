@@ -19,17 +19,22 @@ class Pirates extends Component {
         hard: []
       },
       shopUpgrades: [
-        { title: 'Better Wood!', explanation: 'Increase your shield by 1', repurchasable: false, cost: 20, shield: 1 },
-        { title: 'Bigger Cannons!', explanation: 'Increase your damage by 1', repurchasable: false, cost: 20, damage: 1 },
-        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: false, cost: 30, health: 30 },
-        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 50, wordDuration: 500},
-        { title: 'Metal Hull!', explanation: 'Increase your shield by 1', repurchasable: false, cost: 200, shield: 1 },
-        { title: 'More Cannons!', explanation: 'Increase your damage by 1', repurchasable: false, cost: 200, damage: 1 },
-        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: false, cost: 300, health: 30 },
-        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 500, wordDuration: 500},
-        { title: 'Big Head (Risky)', explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5', repurchasable: true, cost: 0, damage: 1, enemyDamage: 5},
-        { title: 'More Ammo For Everyone! (Risky)', explanation: 'Words appear more often', repurchasable: true, cost: 0, newWordFrequency: -1},
-        { title: 'Bribe the Judge!', explanation: '1 extra point per word typed', repurchasable: false, cost: 100, scoreIncrementer: 1 },
+        { title: 'Better Wood!', explanation: 'Increase your shield by 1', quantity: 3, multiplyUpgradeCost: 10, cost: 20, shield: 1 },
+        { title: 'Bigger Cannons!', explanation: 'Increase your damage by 1', quantity: 3, multiplyUpgradeCost: 10, cost: 20, damage: 1 },
+        { title: 'Repairman!', explanation: 'Add 30 to your ship\'s health', quantity: 1, cost: 30, health: 30 },
+        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', quantity: 5, multiplyUpgradeCost: 10, cost: 50, wordDuration: 500},
+        { title: 'Less Ammo For Everyone!', explanation: 'Words appear less often', quantity: 2, cost: 100, addToUpgradeCost: 100, newWordFrequency: 5},
+        { title: 'Bribe the Judge!', explanation: '1 extra point per word typed', quantity: 2, addToUpgradeCost: 10, cost: 100, scoreIncrementer: 1 },
+        { title: 'New Business Partner!', explanation: '100 extra points per enemy ship destroyed', quantity: 2, addToUpgradeCost: 100, cost: 150, shipScoreIncrementer: 100 },
+        { title: 'Double Me Up!', explanation: 'Double the points you get per word typed', quantity: 1, cost: 800, multiplyScoreIncrementer: 2 },
+        { title: 'Bribe the Judge\'s Boss!', explanation: '3 extra points per word typed', quantity: 2, addToUpgradeCost: 500, cost: 1000, scoreIncrementer: 3 },
+        
+        { title: 'Sell a Cannon!', risky: true, explanation: 'Decrease your damage by 1, get 100 pts', quantity: 1, cost: -100, damage: -1 },
+        { title: 'Big Head!', risky: true, explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5. You also earn 1 extra point per word typed.', quantity: 50, addToUpgradeCost: 3, cost: 3, damage: 1, enemyDamage: 5, scoreIncrementer: 1},
+        { title: 'More Ammo For Everyone!', risky: true, explanation: 'Words appear more often', quantity: 2, cost: 10, newWordFrequency: -5},
+        { title: 'Protect The Enemy!', risky: true, explanation: 'Increase your enemy\'s shield by 5', quantity: 3, multiplyUpgradeCost: 2.5, cost: 40, enemyShield: 5 },
+        { title: 'Invest in Cannonballs!', risky: true, explanation: '1 extra point per word typed, 100 less points per enemy ship destroyed', quantity: 1, cost: 100, shipScoreIncrementer: -100, scoreIncrementer: 1 },
+        { title: 'Invest in Lumber!', risky: true, explanation: '1 less point per word typed, 500 extra points per enemy ship destroyed', quantity: 1, cost: 600, shipScoreIncrementer: 500, scoreIncrementer: -1 },
       ]
     }
 
@@ -64,7 +69,6 @@ class Pirates extends Component {
       difficulty: this.state.difficulty
     })
     .then (res => {
-      console.log(res);
       this.getPiratesHighScores();
     })
     .catch(err => {
@@ -100,16 +104,22 @@ class Pirates extends Component {
       this.data.wordDuration += upgrade.wordDuration ? upgrade.wordDuration : 0;
       this.data.newWordFrequency += upgrade.newWordFrequency ? upgrade.newWordFrequency : 0;
       this.data.enemy.increasedDamage += upgrade.enemyDamage ? upgrade.enemyDamage : 0;
+      this.data.enemy.shield += upgrade.enemyShield ? upgrade.enemyShield : 0;
       this.data.scoreIncrementer += upgrade.scoreIncrementer ? upgrade.scoreIncrementer : 0;
+      this.data.scoreIncrementer *= upgrade.multiplyScoreIncrementer ? upgrade.multiplyScoreIncrementer : 1;
+      this.data.shipScoreIncrementer += upgrade.shipScoreIncrementer ? upgrade.shipScoreIncrementer : 0;
 
-      // remove from array if not repurchasable
-      if (!this.state.shopUpgrades[i].repurchasable){
-        let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
+      let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
+      // remove from array if no more purchases are available
+      if (upgrade.quantity <= 1){
         newShop.splice(i, 1);
         this.setState({shopUpgrades: newShop});
       }else{
-        // if it is repurchasable, refresh the DOM so that the score/health update
-        this.forceUpdate();
+        // if it is still repurchasable, update the cost if applicable
+        newShop[i].quantity--;
+        newShop[i].cost += upgrade.addToUpgradeCost ? upgrade.addToUpgradeCost : 0;
+        newShop[i].cost *= upgrade.multiplyUpgradeCost ? upgrade.multiplyUpgradeCost : 1;
+        this.setState({shopUpgrades: newShop});
       }
     }
 
@@ -152,10 +162,12 @@ class Pirates extends Component {
 
               { this.state.shopUpgrades.map( (item, i) => {
 
-                  let background = (item.cost <= this.data.score) ? '#88ff88' : '#ff8888';
-                  return  <div key={i} className='shopItem' onClick={() => this.buyShopItem(i)} >
-                    <p> {item.title} </p>
-                    <p style={{background, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>
+                  let itemBackground = item.risky ? '#f9ca20' : '#88ff88';
+                  let costBackground = (item.cost <= this.data.score) ? itemBackground : '#ff8888';
+
+                  return  <div key={i} style={{background: itemBackground}} className='shopItem' onClick={() => this.buyShopItem(i)} >
+                    <p> {item.title} ({item.quantity} left) </p>
+                    <p style={{background: costBackground, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>
                     <p> {item.explanation} </p>
                   </div>
 
@@ -172,7 +184,8 @@ class Pirates extends Component {
             <li>The damage a word causes is equal to the length of the word, minus the shield of the ship being attacked. So a 7 letter word hitting a ship with 2 shield would cause 5 damage</li>
             <li>You can see what you have typed right above the game board</li>
             <li>Hitting Enter will clear what you've already typed, Backspace and Delete remove 1 letter from the end of what you've typed</li>
-            <li>*Optionally, you can spend your hard earned points on upgrades in the shop. Opening the upgrade menu will also pause the game</li>
+            <li>*Optionally, you can spend your hard earned points on upgrades in the shop. Opening the upgrade menu will also pause the game!</li>
+            <li>Due to supply and demand, many of the upgrades get more expensive as their quantity decreases</li>
             <li>Toggle the shop by pressing the right arrow, OR clicking the shop button above the game board</li>
           </ul>
 
@@ -195,6 +208,5 @@ class Pirates extends Component {
     );
   }
 }
-
 
 export default Pirates;

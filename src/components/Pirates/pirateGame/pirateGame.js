@@ -23,6 +23,7 @@ let pirateGame = {
         let typedWord = '';
         let score = 0;
         let scoreIncrementer = 1;
+        let shipScoreIncrementer = 100;
         let health = difficultyMapping[difficulty][0];
         let shield = difficultyMapping[difficulty][1];
         let wordDuration = difficultyMapping[difficulty][2];
@@ -31,16 +32,19 @@ let pirateGame = {
         let enemy = new entities.Ship(50, 3);
         let shipsDestroyed = 0;
 
-        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, scoreIncrementer, wordDuration, newWordFrequency, ship, enemy, shipsDestroyed };
+        pirateClass.data = { pirateClass, canvas, context, animationFrame, gameOver, gameRunning, wordsToType, typedWord, score, scoreIncrementer, shipScoreIncrementer, wordDuration, newWordFrequency, ship, enemy, shipsDestroyed };
 
         document.getElementById('toggleShop').style.visibility = 'visible';
         document.getElementById('toggleShop').addEventListener('click', function(){
             pirateGame.togglePauseGame(pirateClass);
             pirateClass.toggleShop();
         })
-        window.addEventListener('keydown', function(e) { 
-            pirateGame.handleInput(e, pirateClass) 
-        });
+
+        // Add keydown event listener
+        pirateClass.data.keydownListener = function(e){
+            pirateGame.handleInput(e, pirateClass);
+        }
+        window.addEventListener('keydown', pirateClass.data.keydownListener);
 
         pirateGame.run(pirateClass);
     },
@@ -65,9 +69,21 @@ let pirateGame = {
 
     togglePauseGame: pirateClass => {
         if (pirateClass.data.gameRunning){
-            document.getElementById('messageDiv').innerText = 'Paused. Press Left arrow to continue.';
+            // Check how much time has elapsed for each word on the screen
+            let now = new Date().getTime();
+            pirateClass.data.wordsToType.forEach( obj => {
+                obj.timeElapsed = now - obj.timeCreated;
+            })
+
             pirateClass.data.gameRunning = false;
         }else{
+            // Update the 'timeCreated' of each word to reflect how much time has elapsed. 
+            // This helps pause the game while in the shop
+            let now = new Date().getTime();
+            pirateClass.data.wordsToType.forEach( obj => {
+                obj.timeCreated = now - obj.timeElapsed;
+            })
+
             document.getElementById('messageDiv').innerText = '';
             pirateClass.data.gameRunning = true;
         }
@@ -76,9 +92,13 @@ let pirateGame = {
     handleInput: (e, pirateClass) => {
         if (pirateClass.data.gameOver) return;
 
+        // Arrows shouldn't scroll the screen
+        if (e.keyCode >= 37 && e.keyCode <= 40){
+            e.preventDefault();
+        }
+
         // right arrow pauses game and opens shop for purchasing upgrades
         if(e.keyCode === 39) {
-            e.preventDefault();
             pirateGame.togglePauseGame(pirateClass);
             pirateClass.toggleShop();
         }
@@ -105,9 +125,9 @@ let pirateGame = {
     },
 
     checkForCompleteWord: pirateClass => {
-        let { wordsToType, typedWord, ship, scoreIncrementer } = pirateClass.data;
+        let { wordsToType, typedWord, ship, scoreIncrementer, shipScoreIncrementer } = pirateClass.data;
         // Finds the first word that matches what the user has typed so far and removes it from the list
-        for (let i = wordsToType.length-1; i >= 0; i--){
+        for (let i = 0; i < wordsToType.length; i++){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
 
                 if (wordsToType[i].type === 'cannonball'){
@@ -119,26 +139,26 @@ let pirateGame = {
                     // When destroying an enemy ship
                     if (pirateClass.data.enemy.health <= 0){
                         // Additional points
-                        pirateClass.data.score += 100;
+                        pirateClass.data.score += shipScoreIncrementer;
                         pirateClass.data.shipsDestroyed ++;
+                        
+                        // User earns additional damage
+                        pirateClass.data.ship.increasedDamage++;
 
-                        // Create a new enemy
-                        let newEnemyHealth = (60 * pirateClass.data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
-                        let newEnemyShield = Math.floor(Math.random() * 5) + 1
-                        pirateClass.data.enemy = new entities.Ship(newEnemyHealth, newEnemyShield);
+                        // "Create" a new enemy by updating the enemy's health/increasedDamage
+                        pirateClass.data.enemy.health = (20 * pirateClass.data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
+                        pirateClass.data.enemy.increasedDamage++;
 
-                        // things get harder (max out at 1500ms word duration and a new word every 50 animationFrames)
+                        // things get faster (max out at 1500ms word duration and a new word every 50 animationFrames)
                         pirateClass.data.wordDuration -= 100;
-                        pirateClass.data.newWordFrequency -= 1;
-                        if (pirateClass.data.wordDuration < 1200) pirateClass.data.wordDuration = 1200;
-                        if (pirateClass.data.newWordFrequency < 50) pirateClass.data.newWordFrequency = 50;
+                        pirateClass.data.newWordFrequency -= 2;
                     }
                 }else{
                     pirateClass.data.ship.health += 2;
                 }
 
                 pirateClass.data.typedWord = '';
-                pirateClass.data.wordsToType.splice(i, 1);
+                pirateClass.data.wordsToType.splice(i--, 1);
                 return;
             }
         }
@@ -147,10 +167,14 @@ let pirateGame = {
     update: pirateClass => {
         let { wordsToType, newWordFrequency, ship, enemy, canvas } = pirateClass.data;
 
+        // Establish minimums for wordDuration and newWordFrequency
+        if (pirateClass.data.wordDuration < 1200) pirateClass.data.wordDuration = 1200;
+        if (pirateClass.data.newWordFrequency < 50) pirateClass.data.newWordFrequency = 50;
+
         // Every 60/80/100 frames (depending on difficulty), add a word to the user's array of words they need to type
         if (pirateClass.data.animationFrame % newWordFrequency === 0){
             let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
-            let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
+            let randY = Math.floor(Math.random() * (canvas.height-270)) + 240;
             let newWord = new entities.Word(randX, randY, 'cannonball');
             wordsToType.push(newWord);
 
@@ -158,7 +182,7 @@ let pirateGame = {
             let randomChance = Math.floor(Math.random() * 100);
             if (randomChance <= 2){
                 let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
-                let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
+                let randY = Math.floor(Math.random() * (canvas.height-270)) + 240;
                 let newWord = new entities.Word(randX, randY, 'repair');
                 wordsToType.push(newWord);
             }
@@ -235,8 +259,11 @@ let pirateGame = {
         document.querySelectorAll('.btn').forEach( btn => btn.style.visibility = 'visible');
         document.getElementById('toggleShop').style.visibility = 'hidden';
 
+        // remove keydown event listener
+        window.removeEventListener('keydown', pirateClass.data.keydownListener);
+
         // Send score to back end
-        pirateClass.data.pirateClass.newPiratesHighScore(score);
+        pirateClass.newPiratesHighScore(score);
     },
 }
 
