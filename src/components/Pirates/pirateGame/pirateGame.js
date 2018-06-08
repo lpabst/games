@@ -162,7 +162,7 @@ let pirateGame = {
         // Every 60/80/100 frames (depending on difficulty), add a word to the user's array of words they need to type
         if (pirateClass.data.animationFrame % newWordFrequency === 0){
             let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
-            let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
+            let randY = Math.floor(Math.random() * (canvas.height-270)) + 240;
             let newWord = new entities.Word(randX, randY, 'cannonball');
             wordsToType.push(newWord);
 
@@ -170,7 +170,7 @@ let pirateGame = {
             let randomChance = Math.floor(Math.random() * 100);
             if (randomChance <= 2){
                 let randX = Math.floor(Math.random() * (canvas.width-170)) + 50;
-                let randY = Math.floor(Math.random() * (canvas.height-130)) + 100;
+                let randY = Math.floor(Math.random() * (canvas.height-270)) + 240;
                 let newWord = new entities.Word(randX, randY, 'repair');
                 wordsToType.push(newWord);
             }
