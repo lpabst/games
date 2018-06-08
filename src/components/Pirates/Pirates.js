@@ -196,5 +196,4 @@ class Pirates extends Component {
   }
 }
 
-
 export default Pirates;

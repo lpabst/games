@@ -26,6 +26,8 @@ module.exports = {
 
     let { name, score, difficulty } = req.body;
 
+    if (!name.match(/[a-z0-9]/i)) name = 'anonymous';
+
     db.newPiratesHighScore([name, score, difficulty])
     .then( response => {
 
