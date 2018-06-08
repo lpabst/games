@@ -108,8 +108,8 @@ let pirateGame = {
             e.preventDefault();
             pirateClass.data.typedWord = pirateClass.data.typedWord.substring(0, pirateClass.data.typedWord.length-1);
         }
-        // enter clears what user has typed
-        else if (e.keyCode === 13){
+        // enter and space bar both clear what user has typed completely
+        else if (e.keyCode === 13 || e.keyCode === 32){
             e.preventDefault();
             pirateGame.checkForCompleteWord(pirateClass);
             pirateClass.data.typedWord = '';

@@ -183,7 +183,7 @@ class Pirates extends Component {
             <li>Every now and then a green word will appear, which repairs your ship for 2 health if you type it fast enough. If it disappears off the screen before you type it, no damage is taken</li>
             <li>The damage a word causes is equal to the length of the word, minus the shield of the ship being attacked. So a 7 letter word hitting a ship with 2 shield would cause 5 damage</li>
             <li>You can see what you have typed right above the game board</li>
-            <li>Hitting Enter will clear what you've already typed, Backspace and Delete remove 1 letter from the end of what you've typed</li>
+            <li>Hitting Enter or Space Bar will clear everything you've already typed, Backspace and Delete remove 1 letter from the end of what you've typed</li>
             <li>*Optionally, you can spend your hard earned points on upgrades in the shop. Opening the upgrade menu will also pause the game!</li>
             <li>Due to supply and demand, many of the upgrades get more expensive as their quantity decreases</li>
             <li>Toggle the shop by pressing the right arrow, OR clicking the shop button above the game board</li>
