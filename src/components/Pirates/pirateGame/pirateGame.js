@@ -149,8 +149,6 @@ let pirateGame = {
                         // things get harder (max out at 1500ms word duration and a new word every 50 animationFrames)
                         pirateClass.data.wordDuration -= 100;
                         pirateClass.data.newWordFrequency -= 1;
-                        if (pirateClass.data.wordDuration < 1200) pirateClass.data.wordDuration = 1200;
-                        if (pirateClass.data.newWordFrequency < 50) pirateClass.data.newWordFrequency = 50;
                     }
                 }else{
                     pirateClass.data.ship.health += 2;
@@ -165,6 +163,10 @@ let pirateGame = {
 
     update: pirateClass => {
         let { wordsToType, newWordFrequency, ship, enemy, canvas } = pirateClass.data;
+
+        // Establish minimums for wordDuration and newWordFrequency
+        if (pirateClass.data.wordDuration < 1200) pirateClass.data.wordDuration = 1200;
+        if (pirateClass.data.newWordFrequency < 50) pirateClass.data.newWordFrequency = 50;
 
         // Every 60/80/100 frames (depending on difficulty), add a word to the user's array of words they need to type
         if (pirateClass.data.animationFrame % newWordFrequency === 0){

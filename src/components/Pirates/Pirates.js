@@ -19,17 +19,15 @@ class Pirates extends Component {
         hard: []
       },
       shopUpgrades: [
-        { title: 'Better Wood!', explanation: 'Increase your shield by 1', repurchasable: false, cost: 20, shield: 1 },
-        { title: 'Bigger Cannons!', explanation: 'Increase your damage by 1', repurchasable: false, cost: 20, damage: 1 },
-        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: false, cost: 30, health: 30 },
-        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 50, wordDuration: 500},
-        { title: 'Metal Hull!', explanation: 'Increase your shield by 1', repurchasable: false, cost: 200, shield: 1 },
-        { title: 'More Cannons!', explanation: 'Increase your damage by 1', repurchasable: false, cost: 200, damage: 1 },
-        { title: 'Repairman!', explanation: 'Increase your ship\'s health by 30', repurchasable: false, cost: 300, health: 30 },
-        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', repurchasable: false, cost: 500, wordDuration: 500},
-        { title: 'Big Head (Risky)', explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5', repurchasable: true, cost: 0, damage: 1, enemyDamage: 5},
-        { title: 'More Ammo For Everyone! (Risky)', explanation: 'Words appear more often', repurchasable: true, cost: 0, newWordFrequency: -1},
-        { title: 'Bribe the Judge!', explanation: '1 extra point per word typed', repurchasable: false, cost: 100, scoreIncrementer: 1 },
+        { title: 'Better Wood!', explanation: 'Increase your shield by 1', quantity: 3, multiplyUpgradeCost: 10, cost: 20, shield: 1 },
+        { title: 'Bigger Cannons!', explanation: 'Increase your damage by 1', quantity: 3, multiplyUpgradeCost: 10, cost: 20, damage: 1 },
+        { title: 'Repairman!', explanation: 'Add 30 to your ship\'s health', quantity: 1, cost: 30, health: 30 },
+        { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', quantity: 5, multiplyUpgradeCost: 10, cost: 50, wordDuration: 500},
+        { title: 'Less Ammo For Everyone!', explanation: 'Words appear less often', quantity: 2, cost: 100, addToUpgradeCost: 100, newWordFrequency: 20},
+        { title: 'Bribe the Judge!', explanation: '1 extra point per word typed', quantity: 2, addToUpgradeCost: 10, cost: 100, scoreIncrementer: 1 },
+        
+        { title: 'More Ammo For Everyone!', risky: true, explanation: 'Words appear more often', quantity: 200, cost: 0, newWordFrequency: -20},
+        { title: 'Big Head!', risky: true, explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5. You also earn 1 extra point per word typed.', quantity: 100, addToUpgradeCost: 1, cost: 1, damage: 1, enemyDamage: 5, scoreIncrementer: 1},
       ]
     }
 
@@ -102,14 +100,19 @@ class Pirates extends Component {
       this.data.enemy.increasedDamage += upgrade.enemyDamage ? upgrade.enemyDamage : 0;
       this.data.scoreIncrementer += upgrade.scoreIncrementer ? upgrade.scoreIncrementer : 0;
 
-      // remove from array if not repurchasable
-      if (!this.state.shopUpgrades[i].repurchasable){
-        let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
+      console.log(this.data.newWordFrequency);
+
+      let newShop = JSON.parse(JSON.stringify(this.state.shopUpgrades));
+      // remove from array if no more purchases are available
+      if (upgrade.quantity <= 1){
         newShop.splice(i, 1);
         this.setState({shopUpgrades: newShop});
       }else{
-        // if it is repurchasable, refresh the DOM so that the score/health update
-        this.forceUpdate();
+        // if it is still repurchasable, update the cost if applicable
+        newShop[i].quantity--;
+        newShop[i].cost += upgrade.addToUpgradeCost ? upgrade.addToUpgradeCost : 0;
+        newShop[i].cost *= upgrade.multiplyUpgradeCost ? upgrade.multiplyUpgradeCost : 1;
+        this.setState({shopUpgrades: newShop});
       }
     }
 
@@ -152,10 +155,12 @@ class Pirates extends Component {
 
               { this.state.shopUpgrades.map( (item, i) => {
 
-                  let background = (item.cost <= this.data.score) ? '#88ff88' : '#ff8888';
-                  return  <div key={i} className='shopItem' onClick={() => this.buyShopItem(i)} >
-                    <p> {item.title} </p>
-                    <p style={{background, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>
+                  let itemBackground = item.risky ? '#f9ca20' : '#88ff88';
+                  let costBackground = (item.cost <= this.data.score) ? itemBackground : '#ff8888';
+
+                  return  <div key={i} style={{background: itemBackground}} className='shopItem' onClick={() => this.buyShopItem(i)} >
+                    <p> {item.title} ({item.quantity} left) </p>
+                    <p style={{background: costBackground, width: 'fit-content', padding: '2px'}}>Cost: {item.cost} pts</p>
                     <p> {item.explanation} </p>
                   </div>
 
