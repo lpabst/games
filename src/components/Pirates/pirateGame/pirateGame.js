@@ -77,7 +77,7 @@ let pirateGame = {
             pirateClass.data.gameRunning = false;
         }else{
             // Update the 'timeCreated' of each word to reflect how much time has elapsed. 
-            // This effectively pauses the game while in the shop
+            // This helps pause the game while in the shop
             let now = new Date().getTime();
             pirateClass.data.wordsToType.forEach( obj => {
                 obj.timeCreated = now - obj.timeElapsed;
