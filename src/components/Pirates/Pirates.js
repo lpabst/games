@@ -23,10 +23,11 @@ class Pirates extends Component {
         { title: 'Bigger Cannons!', explanation: 'Increase your damage by 1', quantity: 3, multiplyUpgradeCost: 10, cost: 20, damage: 1 },
         { title: 'Repairman!', explanation: 'Add 30 to your ship\'s health', quantity: 1, cost: 30, health: 30 },
         { title: 'Better Aim!', explanation: 'Words stay on the screen for an extra 0.5 seconds', quantity: 5, multiplyUpgradeCost: 10, cost: 50, wordDuration: 500},
-        { title: 'Less Ammo For Everyone!', explanation: 'Words appear less often', quantity: 2, cost: 100, addToUpgradeCost: 100, newWordFrequency: 20},
+        { title: 'Less Ammo For Everyone!', explanation: 'Words appear less often', quantity: 2, cost: 100, addToUpgradeCost: 100, newWordFrequency: 5},
         { title: 'Bribe the Judge!', explanation: '1 extra point per word typed', quantity: 2, addToUpgradeCost: 10, cost: 100, scoreIncrementer: 1 },
         
-        { title: 'More Ammo For Everyone!', risky: true, explanation: 'Words appear more often', quantity: 200, cost: 0, newWordFrequency: -20},
+        { title: 'Sell a Cannon!', risky: true, explanation: 'Decrease your damage by 1, get 100 pts', quantity: 1, cost: -100, damage: -1 },
+        { title: 'More Ammo For Everyone!', risky: true, explanation: 'Words appear more often', quantity: 2, cost: 10, newWordFrequency: -5},
         { title: 'Big Head!', risky: true, explanation: 'Your ship has increased damage of 1, but enemy ships have increased damage of 5. You also earn 1 extra point per word typed.', quantity: 100, addToUpgradeCost: 1, cost: 1, damage: 1, enemyDamage: 5, scoreIncrementer: 1},
       ]
     }
