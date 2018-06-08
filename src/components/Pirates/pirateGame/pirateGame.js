@@ -141,15 +141,15 @@ let pirateGame = {
                         // Additional points
                         pirateClass.data.score += shipScoreIncrementer;
                         pirateClass.data.shipsDestroyed ++;
+                        
+                        // User earns additional damage
+                        pirateClass.data.ship.increasedDamage++;
 
-                        // "Create" a new enemy by updating the enemy's health/shield/increasedDamage
-                        let newEnemyHealth = (20 * pirateClass.data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
-                        let newEnemyShield = Math.floor(Math.random() * 5) + 1;
-                        pirateClass.data.enemy.health = newEnemyHealth;
-                        pirateClass.data.enemy.shield = newEnemyShield;
+                        // "Create" a new enemy by updating the enemy's health/increasedDamage
+                        pirateClass.data.enemy.health = (20 * pirateClass.data.shipsDestroyed) + (Math.floor(Math.random() * 50) + 70);
                         pirateClass.data.enemy.increasedDamage++;
 
-                        // things get harder (max out at 1500ms word duration and a new word every 50 animationFrames)
+                        // things get faster (max out at 1500ms word duration and a new word every 50 animationFrames)
                         pirateClass.data.wordDuration -= 100;
                         pirateClass.data.newWordFrequency -= 2;
                     }
