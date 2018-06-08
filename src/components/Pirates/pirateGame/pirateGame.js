@@ -107,7 +107,7 @@ let pirateGame = {
     checkForCompleteWord: pirateClass => {
         let { wordsToType, typedWord, ship, scoreIncrementer } = pirateClass.data;
         // Finds the first word that matches what the user has typed so far and removes it from the list
-        for (let i = wordsToType.length-1; i >= 0; i--){
+        for (let i = 0; i < wordsToType.length; i++){
             if (wordsToType[i].word.toLowerCase().trim() === typedWord.toLowerCase().trim()){
 
                 if (wordsToType[i].type === 'cannonball'){
@@ -138,7 +138,7 @@ let pirateGame = {
                 }
 
                 pirateClass.data.typedWord = '';
-                pirateClass.data.wordsToType.splice(i, 1);
+                pirateClass.data.wordsToType.splice(i--, 1);
                 return;
             }
         }
@@ -236,7 +236,7 @@ let pirateGame = {
         document.getElementById('toggleShop').style.visibility = 'hidden';
 
         // Send score to back end
-        pirateClass.data.pirateClass.newPiratesHighScore(score);
+        pirateClass.newPiratesHighScore(score);
     },
 }
 
