@@ -4,17 +4,21 @@ var sandPile = {
         var canvas = document.getElementById('sandpileCanvas');
         var context = canvas.getContext('2d');
         var animationFrame = 0;
-
+        
         var sandArray = [];
-        for (var i = 0; i <= 200; i++){
+        var scale = 6;
+        var cols = Math.floor(canvas.width / scale);
+        var rows = Math.floor(canvas.height / scale);
+
+        for (var i = 0; i <= cols; i++){
             sandArray[i] = [];
-            for (var j = 0; j <= 200; j++){
+            for (var j = 0; j <= rows; j++){
                 sandArray[i][j] = 0;
             }
         }
-        sandArray[100][100] = 400;
+        sandArray[cols/2][rows/2] = 1000000;
 
-        artClass.data = { canvas, context, animationFrame, sandArray };
+        artClass.data = { canvas, context, animationFrame, sandArray, scale, cols, rows };
 
         sandPile.run(artClass);
     },
@@ -31,18 +35,18 @@ var sandPile = {
 
     update: function(artClass){
         // Copy sandArray
-        let { sandArray } = artClass.data;
+        let { sandArray, cols, rows } = artClass.data;
         let nextFrameSandArray = JSON.parse(JSON.stringify(sandArray));
         
         // Piles that are too large overflow onto their neighbors here
-        for (var i = 0; i <= 200; i++){
-            for (var j = 0; j <= 200; j++) {
+        for (var i = 0; i <= cols; i++){
+            for (var j = 0; j <= rows; j++) {
                 if (sandArray[i][j] >= 4){
                     nextFrameSandArray[i][j] -= 4;
-                    nextFrameSandArray[i][j+1] ++;
-                    nextFrameSandArray[i][j-1] ++;
-                    nextFrameSandArray[i+1][j] ++;
-                    nextFrameSandArray[i-1][j] ++;
+                    if (j < rows) nextFrameSandArray[i][j+1] ++;
+                    if (j > 0) nextFrameSandArray[i][j-1] ++;
+                    if (i < cols) nextFrameSandArray[i+1][j] ++;
+                    if (i > 0) nextFrameSandArray[i-1][j] ++;
                 }
             }
         }
@@ -51,7 +55,7 @@ var sandPile = {
     },
 
     render: function(artClass){
-        let { canvas, context, sandArray } = artClass.data
+        let { canvas, context, sandArray, scale, cols, rows } = artClass.data
 
         // Black background
         context.fillStyle = '#000000';
@@ -60,11 +64,11 @@ var sandPile = {
         // index maps to the number of sand particles on any pixel
         var colorMapping = ['#000', '#551c00', '#803815', '#d48d6a', '#ffc6aa'];
 
-        for (var i = 0; i <= 200; i++){
-            for (var j = 0; j <= 200; j++) {
+        for (var i = 0; i <= cols; i++){
+            for (var j = 0; j <= rows; j++) {
                 var numSandParticles = sandArray[i][j];
                 context.fillStyle = colorMapping[numSandParticles] ? colorMapping[numSandParticles] : '#ffc6aa';
-                context.fillRect(i*3, j*3, 3, 3);
+                context.fillRect(i*scale, j*scale, scale, scale);
             }
         }
     },
