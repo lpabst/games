@@ -25,6 +25,7 @@ class Home extends Component {
                 <div className='header'>
                     <ul className='topNav' >
                         <Link to='/' > Home </Link>
+                        <Link to='/art' > Art </Link>
                         <Link to='/pirates' > Pirates </Link>
                         <a href='http://snake.lorenpabst.com' > Snake </a>
                     </ul>
