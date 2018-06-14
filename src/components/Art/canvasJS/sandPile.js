@@ -6,7 +6,7 @@ var sandPile = {
         var animationFrame = 0;
         
         var sandArray = [];
-        var scale = 6;
+        var scale = 4;
         var cols = Math.floor(canvas.width / scale);
         var rows = Math.floor(canvas.height / scale);
 
