@@ -5,7 +5,8 @@ var gameOfLife = {
         var context = canvas.getContext('2d');
         var animationFrame = 0;
 
-        let resolution = 30;
+        let resolution = 10;
+        let fadingEffect = false;
         var cols = Math.floor(canvas.width / resolution);
         var rows = Math.floor(canvas.height / resolution);
         
@@ -15,13 +16,13 @@ var gameOfLife = {
             grid[i] = new Array(cols);
             for (let j = 0; j < grid[i].length; j++){
                 let r = Math.random();
-                let alive = r < 0.5;
+                let alive = r < 0.11;
                 grid[i][j] = new gameOfLife.Cell(alive);
             }
         }
 
         artClass.gameOfLife = {};
-        artClass.gameOfLife.data = { canvas, context, animationFrame, resolution, cols, rows, grid };
+        artClass.gameOfLife.data = { canvas, context, animationFrame, resolution, fadingEffect, cols, rows, grid };
 
         gameOfLife.run(artClass);
     },
@@ -65,7 +66,7 @@ var gameOfLife = {
     },
 
     render: function(artClass){
-        let { canvas, context, resolution, rows, cols, grid } = artClass.gameOfLife.data;
+        let { canvas, context, resolution, fadingEffect, rows, cols, grid } = artClass.gameOfLife.data;
 
         // Black background
         context.fillStyle = '#000000';
@@ -81,7 +82,7 @@ var gameOfLife = {
 
                 if (grid[i][j].alive) { 
                     context.fillStyle = '#fff'; 
-                }else{
+                }else if (fadingEffect){
                     for (let k = grid[i][j].history.length-1; k >= 0; k--){
                         if (grid[i][j].history[k]){
                             context.fillStyle = colorMapping[k];
