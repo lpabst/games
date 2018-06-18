@@ -19,13 +19,13 @@ class Art extends Component {
   }
 
   clickToDropSand(e){
-    let { scale } = this.data;
+    let { scale } = this.sandPile.data;
     let bounds = e.target.getBoundingClientRect();
     let x = e.clientX - bounds.left;
     let y = e.clientY - bounds.top;
     let i = Math.floor(x/scale);
     let j = Math.floor(y/scale);
-    this.data.sandArray[i][j] += 1000000;
+    this.sandPile.data.sandArray[i][j] += 1000000;
   }
 
   toggleGameOfLifeFadingEffect(){

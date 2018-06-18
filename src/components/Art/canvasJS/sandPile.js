@@ -4,6 +4,7 @@ var sandPile = {
         var canvas = document.getElementById('sandpileCanvas');
         var context = canvas.getContext('2d');
         var animationFrame = 0;
+        var fastForwardSpeed = 1;
         
         var sandArray = [];
         var scale = 4;
@@ -18,14 +19,18 @@ var sandPile = {
         }
         sandArray[cols/2][rows/2] = 1000000;
 
-        artClass.data = { canvas, context, animationFrame, sandArray, scale, cols, rows };
+        artClass.sandPile = {};
+        artClass.sandPile.data = { canvas, context, animationFrame, fastForwardSpeed, sandArray, scale, cols, rows };
 
         sandPile.run(artClass);
     },
 
     run: function(artClass){
+        let { fastForwardSpeed } = artClass.sandPile.data;
         function loop() {
-            sandPile.update(artClass);
+            for (let i = 0; i < fastForwardSpeed; i++){
+                sandPile.update(artClass);
+            }
             sandPile.render(artClass);
             window.requestAnimationFrame(loop);
         }
@@ -35,7 +40,7 @@ var sandPile = {
 
     update: function(artClass){
         // Copy sandArray
-        let { sandArray, cols, rows } = artClass.data;
+        let { sandArray, cols, rows } = artClass.sandPile.data;
         let nextFrameSandArray = JSON.parse(JSON.stringify(sandArray));
         
         // Piles that are too large overflow onto their neighbors here
@@ -51,11 +56,11 @@ var sandPile = {
             }
         }
 
-        artClass.data.sandArray = JSON.parse(JSON.stringify(nextFrameSandArray));
+        artClass.sandPile.data.sandArray = JSON.parse(JSON.stringify(nextFrameSandArray));
     },
 
     render: function(artClass){
-        let { canvas, context, sandArray, scale, cols, rows } = artClass.data
+        let { canvas, context, sandArray, scale, cols, rows } = artClass.sandPile.data
 
         // Black background
         context.fillStyle = '#000000';
