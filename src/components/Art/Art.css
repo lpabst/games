@@ -1,0 +1,23 @@
+
+.artWrapper{
+    width: 600px;
+    min-height: 600px;
+    margin: 0px auto 30px auto;
+    border: 1px solid black;
+    box-shadow: 4px 4px 6px #999;
+    padding-top: 10px;
+}
+
+.artWrapper h1{
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+
+.artWrapper p{
+    width: 100%;
+    padding: 0px 20px;
+    font-size: 18px;
+}
