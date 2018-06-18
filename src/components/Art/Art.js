@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Art.css';
 
 import sandPile from './canvasJS/sandPile.js';
+import gameOfLife from './canvasJS/gameOfLife.js';
 
 class Art extends Component {
   constructor(props){
@@ -14,6 +15,7 @@ class Art extends Component {
 
   componentDidMount(){
     sandPile.init(this);
+    gameOfLife.init(this);
   }
 
   clickToDropSand(e){
@@ -41,7 +43,7 @@ class Art extends Component {
           </div>
 
           <div className='canvasWrapper'>
-            <canvas width='600' height='600' id='canvas2'></canvas>
+            <canvas width='600' height='600' id='gameOfLifeCanvas'></canvas>
           </div>
 
           <div className='canvasWrapper'>
