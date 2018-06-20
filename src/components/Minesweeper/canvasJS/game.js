@@ -5,18 +5,17 @@ var minesweeper = {
         document.getElementById('messageDiv').innerText = '';
         document.querySelectorAll('.btn').forEach( btn => btn.style.visibility = 'hidden');
 
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-        var animationFrame = 0;
-        var gameOver = false;
-        var gameRunning = true;
+        let canvas = document.getElementById('canvas');
+        let context = canvas.getContext('2d');
+        let animationFrame = 0;
+        let gameOver = false;
         let minesLeft = 10;
         let cellWidth = 60;
         let rows = canvas.height / cellWidth;
         let cols = canvas.width / cellWidth;
         let board = minesweeper.generateBoard(minesLeft, rows, cols);
 
-        minesweeperClass.data = { canvas, context, animationFrame, gameOver, gameRunning, minesLeft, cellWidth, rows, cols, board };
+        minesweeperClass.data = { canvas, context, animationFrame, gameOver, minesLeft, cellWidth, rows, cols, board };
 
         minesweeper.run(minesweeperClass);
     },
@@ -77,7 +76,42 @@ var minesweeper = {
     },
 
     render: function(minesweeperClass){
+        let { canvas, context, board, cols, rows, cellWidth } = minesweeperClass.data;
 
+        let colorMapping = {
+            1: '#2c2',
+            2: '#55a',
+            3: '#5a5',
+            4: '#77f',
+            5: '#7f7',
+            6: '#99e',
+            7: '#9e9',
+            8: '#22c',
+        }
+
+        // Black background
+        context.fillStyle = '#000000';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        // draw board
+        context.fillStyle = 'gray';
+        for (let i = 0; i < rows; i++){
+            for (let j = 0; j < cols; j++){
+                let cell = board[i][j];
+                let numBombs = cell.neighboringBombs;
+
+                context.fillRect(j*cellWidth, i*cellWidth, cellWidth-1, cellWidth-1);
+                if (cell.isVisible){
+                    if (cell.isBomb){
+                        context.fillStyle = 'red';
+                        context.fillText('B', j*cellWidth, i*cellWidth);
+                    }else if (numBombs !== 0){
+                        context.fillStyle = colorMapping[numBombs];
+                        context.fillText(numBombs, j*cellWidth, i*cellWidth);
+                    }
+                }
+            }
+        }
     },
 }
 

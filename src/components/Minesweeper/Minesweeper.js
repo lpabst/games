@@ -21,6 +21,36 @@ class Minesweeper extends Component {
     this.setState({showHighScores});
   }
 
+  handleClick(e){
+    let { cellWidth, board } = this.data;
+    let bounds = e.target.getBoundingClientRect();
+    let x = e.clientX - bounds.left;
+    let y = e.clientY - bounds.top;
+    let i = Math.floor(x/cellWidth);
+    let j = Math.floor(y/cellWidth);
+    this.data.board[i][j].click();
+
+    if (this.data.board[i][j].isVisible && this.data.board[i][j].isBomb){
+      this.data.gameOver = true;
+    }
+
+    // reveal all neighboring cells with 0 neighboringBombs
+    function openEmptySpace(i, j){
+      if (board[i-1] && board[i-1][j-1]) board[i-1][j-1].reveal();
+      if (board[i-1] && board[i-1][j]) board[i-1][j].reveal();
+      if (board[i-1] && board[i-1][j+1]) board[i-1][j+1].reveal();
+      if (board[i]   && board[i][j-1]) board[i][j-1].reveal();
+      if (board[i]   && board[i][j+1]) board[i][j+1].reveal();
+      if (board[i+1] && board[i+1][j-1]) board[i+1][j-1].reveal();
+      if (board[i+1] && board[i+1][j]) board[i+1][j].reveal();
+      if (board[i+1] && board[i+1][j+1]) board[i+1][j+1].reveal();
+    }
+
+    if (this.data.board[i][j].isVisible && this.data.board[i][j].neighboringBombs === 0){
+      openEmptySpace(i, j)
+    }
+  }
+
   render() {
     return (
       <div className="Minesweeper">
@@ -35,7 +65,7 @@ class Minesweeper extends Component {
           </div>
 
           <div className='canvasWrapper'>
-            <canvas width='600' height='600' id='canvas'></canvas>
+            <canvas width='600' height='600' id='canvas' onClick={() => this.handleClick()} ></canvas>
             <div id='messageDiv' ></div>
           </div>
 
