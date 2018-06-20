@@ -94,20 +94,24 @@ var minesweeper = {
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // draw board
-        context.fillStyle = 'gray';
         for (let i = 0; i < rows; i++){
             for (let j = 0; j < cols; j++){
                 let cell = board[i][j];
                 let numBombs = cell.neighboringBombs;
-
+                
+                context.fillStyle = 'gray';
                 context.fillRect(j*cellWidth, i*cellWidth, cellWidth-1, cellWidth-1);
-                if (cell.isVisible){
+
+                if (cell.visible){
+                    context.font = '20px Arial';
+                    let textX = (j*cellWidth) + (cellWidth-10)/2;
+                    let textY = (i*cellWidth) + (cellWidth+10)/2;
                     if (cell.isBomb){
                         context.fillStyle = 'red';
-                        context.fillText('B', j*cellWidth, i*cellWidth);
+                        context.fillText('B', textX, textY);
                     }else if (numBombs !== 0){
                         context.fillStyle = colorMapping[numBombs];
-                        context.fillText(numBombs, j*cellWidth, i*cellWidth);
+                        context.fillText(numBombs, textX, textY);
                     }
                 }
             }

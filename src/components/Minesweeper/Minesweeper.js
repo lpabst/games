@@ -65,7 +65,7 @@ class Minesweeper extends Component {
           </div>
 
           <div className='canvasWrapper'>
-            <canvas width='600' height='600' id='canvas' onClick={() => this.handleClick()} ></canvas>
+            <canvas width='600' height='600' id='canvas' onClick={(e) => this.handleClick(e)} ></canvas>
             <div id='messageDiv' ></div>
           </div>
 
