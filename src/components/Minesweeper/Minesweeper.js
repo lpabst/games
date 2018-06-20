@@ -12,6 +12,12 @@ class Minesweeper extends Component {
     }
   }
 
+  componentDidMount(){
+    document.oncontextmenu = function() {
+      return false;
+    }
+  }
+
   startNewGame(){
     minesweeper.init(this);
   }
@@ -22,7 +28,19 @@ class Minesweeper extends Component {
   }
 
   handleClick(e){
-    minesweeper.handleClick(this, e);
+    var isRightMB;
+    e = e || window.event;
+
+    if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+        isRightMB = e.which === 3; 
+    else if ("button" in e)  // IE, Opera 
+        isRightMB = e.button === 2; 
+
+    if (isRightMB){
+      minesweeper.handleClick(this, e, true);
+    }else{
+      minesweeper.handleClick(this, e, false);
+    }
   }
 
   render() {
@@ -39,7 +57,7 @@ class Minesweeper extends Component {
           </div>
 
           <div className='canvasWrapper'>
-            <canvas width='600' height='600' id='canvas' onClick={(e) => this.handleClick(e)} ></canvas>
+            <canvas width='600' height='600' id='canvas' onMouseUp={(e) => this.handleClick(e)} ></canvas>
             <div id='messageDiv' ></div>
           </div>
 

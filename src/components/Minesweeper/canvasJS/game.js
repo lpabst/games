@@ -23,10 +23,10 @@ var minesweeper = {
     generateBoard: function (minesLeft, rows, cols) {
         // generate board of cells
         let board = [];
-        let values = [];
+        // let values = [];
         for (let i = 0; i < rows; i++) {
             board[i] = [];
-            values[i] = [];
+            // values[i] = [];
             for (let j = 0; j < cols; j++) {
                 board[i][j] = new entities.Cell();
             }
@@ -55,23 +55,29 @@ var minesweeper = {
                 if (board[i + 1] && board[i + 1][j] && board[i + 1][j].isBomb) neighboringBombs++;
                 if (board[i + 1] && board[i + 1][j + 1] && board[i + 1][j + 1].isBomb) neighboringBombs++;
                 board[i][j].neighboringBombs = neighboringBombs
-                values[i][j] = neighboringBombs;
+                // values[i][j] = neighboringBombs;
             }
         }
 
-        console.table(values);
+        // console.table(values);
 
         return board;
     },
 
-    handleClick: function (minesweeperClass, e) {
-        let { cellWidth, board } = minesweeperClass.data;
+    handleClick: function (minesweeperClass, e, rightClick) {
+        let { cellWidth, board, minesLeft } = minesweeperClass.data;
         let bounds = e.target.getBoundingClientRect();
         let x = e.clientX - bounds.left;
         let y = e.clientY - bounds.top;
         let i = Math.floor(y / cellWidth);
         let j = Math.floor(x / cellWidth);
         let cell = board[i][j];
+
+        // if it's a right click, toggle the cell as a suspected bomb
+        if (rightClick){
+            minesweeperClass.data.board[i][j].isSuspect = !minesweeperClass.data.board[i][j].isSuspect;
+            return;
+        }
 
         // if it's already visible, or marked with a flag, do nothing
         if (cell.isVisible || cell.isSuspect) return;
@@ -82,6 +88,15 @@ var minesweeper = {
         } else {
             // otherwise, open the cell
             minesweeperClass.data.board = openCell(board, i, j)
+            
+            // check if the user won the game
+            let numUnClicked = 0;
+            for (let i = 0; i < board.length; i++){
+                for (let j = 0; j < board[i].length; j++){
+                    if (!board[i][j].isVisible) numUnClicked++;
+                }
+            }
+            if (numUnClicked === minesLeft) minesweeper.endGame(minesweeperClass, false);
         }
 
     },
@@ -106,14 +121,14 @@ var minesweeper = {
         let { canvas, context, board, cols, rows, cellWidth } = minesweeperClass.data;
 
         let colorMapping = {
-            1: '#2c2',
-            2: '#55a',
-            3: '#5a5',
-            4: '#77f',
-            5: '#7f7',
-            6: '#99e',
-            7: '#9e9',
-            8: '#22c',
+            1: '#00f',
+            2: '#080',
+            3: '#f10',
+            4: '#008',
+            5: '#810500',
+            6: '#2a9494',
+            7: '#000',
+            8: '#888',
         }
 
         // Black background
@@ -124,15 +139,16 @@ var minesweeper = {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 let cell = board[i][j];
+                let textX = (j * cellWidth) + (cellWidth - 10) / 2;
+                let textY = (i * cellWidth) + (cellWidth + 10) / 2;
                 let numBombs = cell.neighboringBombs;
+                
+                context.font = '20px Arial';
 
                 if (cell.isVisible) {
                     context.fillStyle = '#999';
                     context.fillRect(j * cellWidth, i * cellWidth, cellWidth - 1, cellWidth - 1);
 
-                    context.font = '20px Arial';
-                    let textX = (j * cellWidth) + (cellWidth - 10) / 2;
-                    let textY = (i * cellWidth) + (cellWidth + 10) / 2;
                     if (cell.isBomb) {
                         context.fillStyle = 'red';
                         context.fillText('B', textX, textY);
@@ -140,9 +156,14 @@ var minesweeper = {
                         context.fillStyle = colorMapping[numBombs];
                         context.fillText(numBombs, textX, textY);
                     }
-                } else {
+                }else {
                     context.fillStyle = '#666';
                     context.fillRect(j * cellWidth, i * cellWidth, cellWidth - 1, cellWidth - 1);
+                    
+                    if(cell.isSuspect){
+                        context.fillStyle = '#000';
+                        context.fillText('!', textX, textY);
+                    }
                 }
             }
         }
@@ -162,13 +183,15 @@ var minesweeper = {
 
         if (userClickedABomb) {
             document.getElementById('messageDiv').innerText = 'GAME OVER (You clicked a bomb)';
+        }else{
+            document.getElementById('messageDiv').innerText = 'GAME OVER (You Won!)';
         }
     },
 }
 
 export default minesweeper;
 
-// helper functions
+// opens the cell, as well as recursively opening all 0 value cells
 function openCell(board, i, j) {
     let cell = board[i][j];
 
