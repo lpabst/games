@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import './Minesweeper.css';
 
-import './GameTemplate.css';
+import minesweeper from './canvasJS/game.js';
 
-class GameTemplate extends Component {
+class Minesweeper extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -11,8 +12,14 @@ class GameTemplate extends Component {
     }
   }
 
-  startNewGame(){
+  componentDidMount(){
+    document.oncontextmenu = function() {
+      return false;
+    }
+  }
 
+  startNewGame(){
+    minesweeper.init(this);
   }
 
   toggleShowHighScores(){
@@ -20,9 +27,25 @@ class GameTemplate extends Component {
     this.setState({showHighScores});
   }
 
+  handleClick(e){
+    var isRightMB;
+    e = e || window.event;
+
+    if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+        isRightMB = e.which === 3; 
+    else if ("button" in e)  // IE, Opera 
+        isRightMB = e.button === 2; 
+
+    if (isRightMB){
+      minesweeper.handleClick(this, e, true);
+    }else{
+      minesweeper.handleClick(this, e, false);
+    }
+  }
+
   render() {
     return (
-      <div className="GameTemplate">
+      <div className="Minesweeper">
 
         <div className="gameWrapper" >
 
@@ -34,18 +57,12 @@ class GameTemplate extends Component {
           </div>
 
           <div className='canvasWrapper'>
-            <canvas width='600' height='600' id='canvas'></canvas>
+            <canvas width='600' height='600' id='canvas' onMouseUp={(e) => this.handleClick(e)} ></canvas>
             <div id='messageDiv' ></div>
           </div>
 
           <ul className='instructions'>
-            <li>Earn points by eating the green pieces of food and staying alive longer</li>
-            <li>Use the arrows to change directions</li>
-            <li>Space Bar pauses the game</li>
-            <li>The 4 edge walls of the game are fatal and end the game</li>
-            <li>Red obstalces pop up every 5 pieces of food or so. You can choose whether hitting them ends the game or deducts 500 points. If they deduct you to a negative score, that will end the game as well.</li>
-            <li>Your speed will increase every 2 levels until you reach max speed at level 8. Alternatively, you can start out at the fastest speed if that's your thing.</li>
-            <li>If you earn a high score you will be immortalized in the high scores hall of fame unless a more worthy candidate beats you out</li>
+            <li>Sweep some mines</li>
           </ul>
 
           { this.state.showHighScores &&
@@ -67,4 +84,4 @@ class GameTemplate extends Component {
 }
 
 
-export default GameTemplate;
+export default Minesweeper;
