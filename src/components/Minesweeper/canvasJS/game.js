@@ -1,9 +1,9 @@
 import entities from './entities.js';
 
 var minesweeper = {
-    init: function(minesweeperClass){
+    init: function (minesweeperClass) {
         document.getElementById('messageDiv').innerText = '';
-        document.querySelectorAll('.btn').forEach( btn => btn.style.visibility = 'hidden');
+        document.querySelectorAll('.btn').forEach(btn => btn.style.visibility = 'hidden');
 
         let canvas = document.getElementById('canvas');
         let context = canvas.getContext('2d');
@@ -20,68 +20,73 @@ var minesweeper = {
         minesweeper.run(minesweeperClass);
     },
 
-    generateBoard: function(minesLeft, rows, cols){
+    generateBoard: function (minesLeft, rows, cols) {
         // generate board of cells
         let board = [];
-        for (let i = 0; i < rows; i++){
+        let values = [];
+        for (let i = 0; i < rows; i++) {
             board[i] = [];
-            for (let j = 0; j < cols; j++){
+            values[i] = [];
+            for (let j = 0; j < cols; j++) {
                 board[i][j] = new entities.Cell();
             }
         }
 
         // pick random spots for the mines
-        while (minesLeft > 0){
+        while (minesLeft > 0) {
             let randI = Math.floor(Math.random() * rows);
             let randJ = Math.floor(Math.random() * cols);
-            if (!board[randI][randJ].isBomb){
+            if (!board[randI][randJ].isBomb) {
                 board[randI][randJ].isBomb = true;
                 minesLeft--;
             }
         }
 
         // Figure out how many neighboring bombs all remaining cells have
-        for (let i = 0; i < rows; i++){
-            for (let j = 0; j < cols; j++){
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
                 let neighboringBombs = 0;
-                if (board[i-1] && board[i-1][j-1] && board[i-1][j-1].isBomb) neighboringBombs++;
-                if (board[i-1] && board[i-1][j]   && board[i-1][j].isBomb) neighboringBombs++;
-                if (board[i-1] && board[i-1][j+1] && board[i-1][j+1].isBomb) neighboringBombs++;
-                if (board[i]   && board[i][j-1]   && board[i][j-1].isBomb) neighboringBombs++;
-                if (board[i]   && board[i][j+1]   && board[i][j+1].isBomb) neighboringBombs++;
-                if (board[i+1] && board[i+1][j-1] && board[i+1][j-1].isBomb) neighboringBombs++;
-                if (board[i+1] && board[i+1][j]   && board[i+1][j].isBomb) neighboringBombs++;
-                if (board[i+1] && board[i+1][j+1] && board[i+1][j+1].isBomb) neighboringBombs++;
+                if (board[i - 1] && board[i - 1][j - 1] && board[i - 1][j - 1].isBomb) neighboringBombs++;
+                if (board[i - 1] && board[i - 1][j] && board[i - 1][j].isBomb) neighboringBombs++;
+                if (board[i - 1] && board[i - 1][j + 1] && board[i - 1][j + 1].isBomb) neighboringBombs++;
+                if (board[i] && board[i][j - 1] && board[i][j - 1].isBomb) neighboringBombs++;
+                if (board[i] && board[i][j + 1] && board[i][j + 1].isBomb) neighboringBombs++;
+                if (board[i + 1] && board[i + 1][j - 1] && board[i + 1][j - 1].isBomb) neighboringBombs++;
+                if (board[i + 1] && board[i + 1][j] && board[i + 1][j].isBomb) neighboringBombs++;
+                if (board[i + 1] && board[i + 1][j + 1] && board[i + 1][j + 1].isBomb) neighboringBombs++;
                 board[i][j].neighboringBombs = neighboringBombs
+                values[i][j] = neighboringBombs;
             }
         }
+
+        console.table(values);
 
         return board;
     },
 
-    handleClick: function(minesweeperClass, e){
+    handleClick: function (minesweeperClass, e) {
         let { cellWidth, board } = minesweeperClass.data;
         let bounds = e.target.getBoundingClientRect();
         let x = e.clientX - bounds.left;
         let y = e.clientY - bounds.top;
-        let i = Math.floor(y/cellWidth);
-        let j = Math.floor(x/cellWidth);    
+        let i = Math.floor(y / cellWidth);
+        let j = Math.floor(x / cellWidth);
         let cell = board[i][j];
-    
+
         // if it's already visible, or marked with a flag, do nothing
         if (cell.isVisible || cell.isSuspect) return;
 
         // if it's a bomb, end the game
-        if (cell.isBomb){
+        if (cell.isBomb) {
             minesweeper.endGame(minesweeperClass, true);
-        } else{
+        } else {
             // otherwise, open the cell
             minesweeperClass.data.board = openCell(board, i, j)
         }
 
     },
 
-    run: function(minesweeperClass){
+    run: function (minesweeperClass) {
         function loop() {
             minesweeper.update(minesweeperClass);
             minesweeper.render(minesweeperClass);
@@ -93,11 +98,11 @@ var minesweeper = {
         loop();
     },
 
-    update: function(minesweeperClass){
+    update: function (minesweeperClass) {
 
     },
 
-    render: function(minesweeperClass){
+    render: function (minesweeperClass) {
         let { canvas, context, board, cols, rows, cellWidth } = minesweeperClass.data;
 
         let colorMapping = {
@@ -116,45 +121,46 @@ var minesweeper = {
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // draw board
-        for (let i = 0; i < rows; i++){
-            for (let j = 0; j < cols; j++){
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
                 let cell = board[i][j];
                 let numBombs = cell.neighboringBombs;
 
-                if (cell.isVisible){
+                if (cell.isVisible) {
                     context.fillStyle = '#999';
-                    context.fillRect(j*cellWidth, i*cellWidth, cellWidth-1, cellWidth-1);
+                    context.fillRect(j * cellWidth, i * cellWidth, cellWidth - 1, cellWidth - 1);
 
                     context.font = '20px Arial';
-                    let textX = (j*cellWidth) + (cellWidth-10)/2;
-                    let textY = (i*cellWidth) + (cellWidth+10)/2;
-                    if (cell.isBomb){
+                    let textX = (j * cellWidth) + (cellWidth - 10) / 2;
+                    let textY = (i * cellWidth) + (cellWidth + 10) / 2;
+                    if (cell.isBomb) {
                         context.fillStyle = 'red';
                         context.fillText('B', textX, textY);
-                    }else if (numBombs !== 0){
+                    } else if (numBombs !== 0) {
                         context.fillStyle = colorMapping[numBombs];
                         context.fillText(numBombs, textX, textY);
                     }
-                }else{
+                } else {
                     context.fillStyle = '#666';
-                    context.fillRect(j*cellWidth, i*cellWidth, cellWidth-1, cellWidth-1);
+                    context.fillRect(j * cellWidth, i * cellWidth, cellWidth - 1, cellWidth - 1);
                 }
             }
         }
     },
 
-    endGame: function(minesweeperClass, userClickedABomb){
+    endGame: function (minesweeperClass, userClickedABomb) {
         let { board } = minesweeperClass.data;
 
+        document.querySelectorAll('.btn').forEach(btn => btn.style.visibility = 'visible');
         minesweeperClass.data.gameOver = true;
 
-        for (let i = 0; i < board.length; i++){
-            for (let j = 0; j < board[i].length; j++){
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
                 minesweeperClass.data.board[i][j].isVisible = true;
             }
         }
 
-        if (userClickedABomb){
+        if (userClickedABomb) {
             document.getElementById('messageDiv').innerText = 'GAME OVER (You clicked a bomb)';
         }
     },
@@ -166,27 +172,59 @@ export default minesweeper;
 function openCell(board, i, j) {
     let cell = board[i][j];
 
-    // keeps it from hitting the same square over and over again
-    if (board[i][j].isVisible) return board;
+    board[i][j].isVisible = true;
 
-    board[i][j].isVisible = true;   
-    
     // if the cell has no neighboring bombs, open all neighbors
-    if (cell.neighboringBombs === 0){
-        if (board[i-1] && board[i-1][j-1]) board[i-1][j-1].isVisible = true;
-        if (board[i-1] && board[i-1][j]) board[i-1][j].isVisible = true;
-        if (board[i-1] && board[i-1][j+1]) board[i-1][j+1].isVisible = true;
-        if (board[i]   && board[i][j-1]) board[i][j-1].isVisible = true;
-        if (board[i]   && board[i][j+1]) board[i][j+1].isVisible = true;
-        if (board[i+1] && board[i+1][j-1]) board[i+1][j-1].isVisible = true;
-        if (board[i+1] && board[i+1][j]) board[i+1][j].isVisible = true;
-        if (board[i+1] && board[i+1][j+1]) board[i+1][j+1].isVisible = true;
-        
-        // any up/down/left/right neighbor that has no bomb neighbors receives the same treatment
-        if (board[i]   && board[i][j-1] && board[i][j-1].neighboringBombs === 0) openCell(board, i, j-1);
-        if (board[i]   && board[i][j+1] && board[i][j+1].neighboringBombs === 0) openCell(board, i, j+1);
-        if (board[i-1] && board[i-1][j] && board[i-1][j].neighboringBombs === 0) openCell(board, i-1, j);
-        if (board[i+1] && board[i+1][j] && board[i+1][j].neighboringBombs === 0) openCell(board, i+1, j);
+    if (cell.neighboringBombs === 0) {
+        // any neighbor that isn't visible yet, and has no bomb neighbors receives the same treatment
+        if (board[i - 1] && board[i - 1][j - 1] && !board[i - 1][j - 1].isVisible) {
+            board[i - 1][j - 1].isVisible = true;
+            if (board[i - 1][j - 1].neighboringBombs === 0) {
+                openCell(board, i - 1, j - 1);
+            }
+        }
+        if (board[i - 1] && board[i - 1][j] && !board[i - 1][j].isVisible) {
+            board[i - 1][j].isVisible = true;
+            if (board[i - 1][j].neighboringBombs === 0) {
+                openCell(board, i - 1, j);
+            }
+        }
+        if (board[i - 1] && board[i - 1][j + 1] && !board[i - 1][j + 1].isVisible) {
+            board[i - 1][j + 1].isVisible = true;
+            if (board[i - 1][j + 1].neighboringBombs === 0) {
+                openCell(board, i - 1, j + 1);
+            }
+        }
+        if (board[i] && board[i][j - 1] && !board[i][j - 1].isVisible) {
+            board[i][j - 1].isVisible = true;
+            if (board[i][j - 1].neighboringBombs === 0) {
+                openCell(board, i, j - 1);
+            }
+        }
+        if (board[i] && board[i][j + 1] && !board[i][j + 1].isVisible) {
+            board[i][j + 1].isVisible = true;
+            if (board[i][j + 1].neighboringBombs === 0) {
+                openCell(board, i, j + 1);
+            }
+        }
+        if (board[i + 1] && board[i + 1][j - 1] && !board[i + 1][j - 1].isVisible) {
+            board[i + 1][j - 1].isVisible = true;
+            if (board[i + 1][j - 1].neighboringBombs === 0) {
+                openCell(board, i + 1, j - 1);
+            }
+        }
+        if (board[i + 1] && board[i + 1][j] && !board[i + 1][j].isVisible) {
+            board[i + 1][j].isVisible = true;
+            if (board[i + 1][j].neighboringBombs === 0) {
+                openCell(board, i + 1, j);
+            }
+        }
+        if (board[i + 1] && board[i + 1][j + 1] && !board[i + 1][j + 1].isVisible) {
+            board[i + 1][j + 1].isVisible = true;
+            if (board[i + 1][j +1].neighboringBombs === 0) {
+                openCell(board, i + 1, j + 1);
+            }
+        }
     }
 
     return board;
