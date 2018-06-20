@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Minesweeper.css';
 
+import minesweeper from './canvasJS/game.js';
+
 class Minesweeper extends Component {
   constructor(props){
     super(props);
@@ -11,7 +13,7 @@ class Minesweeper extends Component {
   }
 
   startNewGame(){
-
+    minesweeper.init();
   }
 
   toggleShowHighScores(){
