@@ -151,7 +151,10 @@ var minesweeper = {
 
                     if (cell.isBomb) {
                         context.fillStyle = 'red';
-                        context.fillText('B', textX, textY);
+                        // context.fillText('B', textX, textY);
+                        context.arc(textX, textY, 12, 0, Math.PI * 2, false);
+                        context.stroke();
+                        // context.fill();
                     } else if (numBombs !== 0) {
                         context.fillStyle = colorMapping[numBombs];
                         context.fillText(numBombs, textX, textY);
