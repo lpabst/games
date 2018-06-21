@@ -1,4 +1,5 @@
 import entities from './entities.js';
+import bombImageSrc from './../../../media/minesweeperMine.jpg';
 
 var minesweeper = {
     init: function (minesweeperClass) {
@@ -14,10 +15,13 @@ var minesweeper = {
         let rows = canvas.height / cellWidth;
         let cols = canvas.width / cellWidth;
         let board = minesweeper.generateBoard(minesLeft, rows, cols);
-
-        minesweeperClass.data = { canvas, context, animationFrame, gameOver, minesLeft, cellWidth, rows, cols, board };
-
-        minesweeper.run(minesweeperClass);
+        var bombImage = new Image();
+        bombImage.src = bombImageSrc;
+        
+        bombImage.onload = function () {
+            minesweeperClass.data = { canvas, context, animationFrame, gameOver, minesLeft, cellWidth, rows, cols, board, bombImage };
+            minesweeper.run(minesweeperClass);
+        }
     },
 
     generateBoard: function (minesLeft, rows, cols) {
@@ -74,7 +78,7 @@ var minesweeper = {
         let cell = board[i][j];
 
         // if it's a right click, toggle the cell as a suspected bomb
-        if (rightClick){
+        if (rightClick) {
             minesweeperClass.data.board[i][j].isSuspect = !minesweeperClass.data.board[i][j].isSuspect;
             return;
         }
@@ -88,11 +92,11 @@ var minesweeper = {
         } else {
             // otherwise, open the cell
             minesweeperClass.data.board = openCell(board, i, j)
-            
+
             // check if the user won the game
             let numUnClicked = 0;
-            for (let i = 0; i < board.length; i++){
-                for (let j = 0; j < board[i].length; j++){
+            for (let i = 0; i < board.length; i++) {
+                for (let j = 0; j < board[i].length; j++) {
                     if (!board[i][j].isVisible) numUnClicked++;
                 }
             }
@@ -118,7 +122,7 @@ var minesweeper = {
     },
 
     render: function (minesweeperClass) {
-        let { canvas, context, board, cols, rows, cellWidth } = minesweeperClass.data;
+        let { canvas, context, board, cols, rows, cellWidth, bombImage } = minesweeperClass.data;
 
         let colorMapping = {
             1: '#00f',
@@ -139,10 +143,12 @@ var minesweeper = {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 let cell = board[i][j];
+                let imageX = j * cellWidth;
+                let imageY = i * cellWidth;
                 let textX = (j * cellWidth) + (cellWidth - 10) / 2;
                 let textY = (i * cellWidth) + (cellWidth + 10) / 2;
                 let numBombs = cell.neighboringBombs;
-                
+
                 context.font = '20px Arial';
 
                 if (cell.isVisible) {
@@ -150,20 +156,16 @@ var minesweeper = {
                     context.fillRect(j * cellWidth, i * cellWidth, cellWidth - 1, cellWidth - 1);
 
                     if (cell.isBomb) {
-                        context.fillStyle = 'red';
-                        // context.fillText('B', textX, textY);
-                        context.arc(textX, textY, 12, 0, Math.PI * 2, false);
-                        context.stroke();
-                        // context.fill();
+                        context.drawImage(bombImage, imageX, imageY, cellWidth - 1, cellWidth - 1);
                     } else if (numBombs !== 0) {
                         context.fillStyle = colorMapping[numBombs];
                         context.fillText(numBombs, textX, textY);
                     }
-                }else {
+                } else {
                     context.fillStyle = '#666';
                     context.fillRect(j * cellWidth, i * cellWidth, cellWidth - 1, cellWidth - 1);
-                    
-                    if(cell.isSuspect){
+
+                    if (cell.isSuspect) {
                         context.fillStyle = '#000';
                         context.fillText('!', textX, textY);
                     }
@@ -186,7 +188,7 @@ var minesweeper = {
 
         if (userClickedABomb) {
             document.getElementById('messageDiv').innerText = 'GAME OVER (You clicked a bomb)';
-        }else{
+        } else {
             document.getElementById('messageDiv').innerText = 'GAME OVER (You Won!)';
         }
     },
@@ -247,7 +249,7 @@ function openCell(board, i, j) {
         }
         if (board[i + 1] && board[i + 1][j + 1] && !board[i + 1][j + 1].isVisible) {
             board[i + 1][j + 1].isVisible = true;
-            if (board[i + 1][j +1].neighboringBombs === 0) {
+            if (board[i + 1][j + 1].neighboringBombs === 0) {
                 openCell(board, i + 1, j + 1);
             }
         }
