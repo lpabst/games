@@ -77,7 +77,7 @@ class Minesweeper extends Component {
 
           <div className='canvasWrapper'>
             <canvas width='600' height='600' id='canvas' onMouseUp={(e) => this.handleClick(e)} ></canvas>
-            <div id='messageDiv' style={{color: 'black', fontSize: '30px'}} ></div>
+            <div id='messageDiv' style={{color: 'black', fontSize: '30px', textShadow: '1px 1px white'}} ></div>
           </div>
 
           <ul className='instructions'>
