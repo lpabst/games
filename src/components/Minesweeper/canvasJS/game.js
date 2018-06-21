@@ -1,3 +1,4 @@
+import axios from 'axios';
 import entities from './entities.js';
 import bombImageSrc from './../../../media/minesweeperMine.jpg';
 
@@ -69,6 +70,9 @@ var minesweeper = {
     },
 
     handleClick: function (minesweeperClass, e, rightClick) {
+
+        if (!minesweeperClass.data || minesweeperClass.data.gameOver) return;
+
         let { cellWidth, board, minesLeft } = minesweeperClass.data;
         let bounds = e.target.getBoundingClientRect();
         let x = e.clientX - bounds.left;
@@ -82,6 +86,9 @@ var minesweeper = {
             minesweeperClass.data.board[i][j].isSuspect = !minesweeperClass.data.board[i][j].isSuspect;
             return;
         }
+
+        // Start a timer on their first left click
+        if (!minesweeperClass.data.timeStarted) minesweeperClass.data.timeStarted = new Date().getTime();
 
         // if it's already visible, or marked with a flag, do nothing
         if (cell.isVisible || cell.isSuspect) return;
@@ -176,6 +183,7 @@ var minesweeper = {
 
     endGame: function (minesweeperClass, userClickedABomb) {
         let { board } = minesweeperClass.data;
+        let { username } = minesweeperClass.state;
 
         document.querySelectorAll('.btn').forEach(btn => btn.style.visibility = 'visible');
         minesweeperClass.data.gameOver = true;
@@ -189,7 +197,15 @@ var minesweeper = {
         if (userClickedABomb) {
             document.getElementById('messageDiv').innerText = 'GAME OVER (You clicked a bomb)';
         } else {
-            document.getElementById('messageDiv').innerText = 'GAME OVER (You Won!)';
+            let endTime = new Date().getTime();
+            let timeElapsed = ((endTime - minesweeperClass.data.timeStarted) / 1000);
+            document.getElementById('messageDiv').innerText = `GAME OVER. You beat the game in ${timeElapsed} seconds`;
+
+            axios.post('/api/newMinesweeperHighScore', {timeElapsed, username})
+            .then( res => {
+                minesweeperClass.getHighScores();
+            })
+            .catch( err => {})
         }
     },
 }

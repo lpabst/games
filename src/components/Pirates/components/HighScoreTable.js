@@ -12,9 +12,12 @@ class HighScoreTable extends Component {
                   <tr><td>Score</td><td>Name</td></tr>
                   {
                     this.props.rows.map( (item, i) => {
+                      let score = item.score || item[this.props.scoreAlias];
+                      let name = item.name || item[this.props.nameAlias];
+
                       return <tr key={i} >
-                        <td>{item.score}</td>
-                        <td>{item.name}</td>
+                        <td>{score} seconds</td>
+                        <td>{name}</td>
                       </tr>
                     })
                   }

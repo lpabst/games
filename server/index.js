@@ -25,10 +25,14 @@ massive(config.connection)
 app.use(express.static(__dirname + './../build'))
 
 var piratesController = require("./piratesController.js");
+var minesweeperController = require("./minesweeperController.js");
 
 //////////Endpoints for the front end
 app.get('/api/getPiratesHighScores', piratesController.getPiratesHighScores);
 app.post('/api/newPiratesHighScore', piratesController.newPiratesHighScore);
+
+app.get('/api/getMinesweeperHighScores', minesweeperController.getMinesweeperHighScores);
+app.post('/api/newMinesweeperHighScore', minesweeperController.newMinesweeperHighScore);
 
 
 

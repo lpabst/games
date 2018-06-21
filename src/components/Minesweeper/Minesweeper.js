@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Minesweeper.css';
+import axios from 'axios';
+import HighScoreTable from './../Pirates/components/HighScoreTable';
 
 import minesweeper from './canvasJS/game.js';
 
@@ -9,13 +11,30 @@ class Minesweeper extends Component {
     this.state = {
       username: '',
       showHighScores: false,
+      highScores: [{}]
     }
+
+    this.getHighScores = this.getHighScores.bind(this);
   }
 
   componentDidMount(){
     document.oncontextmenu = function() {
       return false;
     }
+
+    this.getHighScores();
+  }
+
+  getHighScores(){
+    axios.get('/api/getMinesweeperHighScores')
+    .then( res => {
+      if (!res.data || !res.data.highScores) return;
+
+      this.setState({
+        highScores: res.data.highScores
+      })
+    })
+    .catch( err => {})
   }
 
   startNewGame(){
@@ -58,7 +77,7 @@ class Minesweeper extends Component {
 
           <div className='canvasWrapper'>
             <canvas width='600' height='600' id='canvas' onMouseUp={(e) => this.handleClick(e)} ></canvas>
-            <div id='messageDiv' ></div>
+            <div id='messageDiv' style={{color: 'black', fontSize: '30px'}} ></div>
           </div>
 
           <ul className='instructions'>
@@ -68,11 +87,11 @@ class Minesweeper extends Component {
           { this.state.showHighScores &&
             <div id='highScores'>
               <div className='closeX' onClick={() => this.toggleShowHighScores()} > x </div>
-              <table id='highScoresTable'>
-                <tbody id='highScoresTableBody'> 
-                  {/* High Score data goes here */} 
-                </tbody>
-              </table>
+              
+              <p className='highScoresHeader' >High Scores</p>
+
+              <HighScoreTable title='10x10' rows={this.state.highScores} scoreAlias={'timeelapsed'} nameAlias={'username'} />
+
             </div>
           }
 
