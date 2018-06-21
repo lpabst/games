@@ -202,10 +202,10 @@ var minesweeper = {
             document.getElementById('messageDiv').innerText = `GAME OVER. You beat the game in ${timeElapsed} seconds`;
 
             axios.post('/api/newMinesweeperHighScore', {timeElapsed, username})
-            .then( res => {
+            .then( () => {
                 minesweeperClass.getHighScores();
             })
-            .catch( err => {})
+            .catch( () => {})
         }
     },
 }

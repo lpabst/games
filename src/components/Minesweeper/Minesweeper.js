@@ -88,9 +88,9 @@ class Minesweeper extends Component {
             <div id='highScores'>
               <div className='closeX' onClick={() => this.toggleShowHighScores()} > x </div>
               
-              <p className='highScoresHeader' >High Scores</p>
+              <p className='highScoresHeader' > Minesweeper High Scores </p>
 
-              <HighScoreTable title='10x10' rows={this.state.highScores} scoreAlias={'timeelapsed'} nameAlias={'username'} />
+              <HighScoreTable title='10x10 board' rows={this.state.highScores} scoreAlias={'timeelapsed'} nameAlias={'username'} />
 
             </div>
           }
