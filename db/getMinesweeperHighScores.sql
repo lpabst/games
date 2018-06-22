@@ -1,3 +1,3 @@
 select * from minesweeperhighscores
-order by score asc
+order by timeelapsed asc
 limit 10

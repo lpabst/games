@@ -3,15 +3,14 @@ var app = require('./index.js');
 module.exports = {
   getMinesweeperHighScores: function(req, res){
     let db = req.app.get('db');
-
     db.getMinesweeperHighScores()
-      .then( highScores => {
-        return res.status(200).send({
+    .then( highScores => {
+      return res.status(200).send({
           error: false,
           message: 'Retrieved high scores',
           highScores: highScores
         });
-    }).catch(err=> {})
+    }).catch(()=> {})
   },
 
   newMinesweeperHighScore: function(req, res){
@@ -21,13 +20,13 @@ module.exports = {
     if (!username.match(/[a-z0-9]/i)) username = 'anonymous';
 
     db.newMinesweeperHighScore([username, timeElapsed])
-    .then( response => {
+    .then( () => {
 
       // clean high scores table for whatever difficulty we just added a new result to
       let keepHowManyHighScores = 20;
       db.cleanMinesweeperHighScores([keepHowManyHighScores-1])
-      .then( done => {})
-      .catch(err => {})
+      .then( () => {})
+      .catch(() => {})
 
       // alert front end we are done
       return res.status(200).send({
@@ -35,7 +34,7 @@ module.exports = {
         message: 'Added new high score to the db',
       });
 
-    }).catch(err => {})
+    }).catch(() => {})
   }
   
 };
