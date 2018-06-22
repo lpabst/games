@@ -21,10 +21,17 @@
 
 .topNav a{
     min-width: 100px;
+    height: 50px;
+    line-height: 50px;
     margin-right: 20px;
     text-decoration: none;
     color: #eee;
     cursor: pointer;
+    text-align: center;
+}
+
+.topNav a:hover{
+    background: #555;
 }
 
 .gamesMenuParent{
@@ -52,10 +59,6 @@
     border-top: 1px solid #222;
     margin: 0px;
     display: block;
-}
-
-.gamesMenu a:hover{
-    background: #555;
 }
 
 .pressStartWrapper{
