@@ -14,34 +14,28 @@ class Home extends Component {
             hoveringOnGamesMenu: false,
         }
 
+        this.handleShowGameMenu = this.handleShowGameMenu.bind(this);
     }
 
     hoverOnGamesMenuParent(){
-        this.setState({
-            hoveringOnGamesMenuParent: true,
-            showGamesMenu: true
-        })
+        this.setState( {hoveringOnGamesMenuParent: true}, this.handleShowGameMenu );
     }
 
     leaveHoverOnGamesMenuParent(){
-        this.setState({
-            showGamesMenu: this.state.hoveringOnGamesMenu ? true : false,
-            hoveringOnGamesMenuParent: false
-        })
+        this.setState( {hoveringOnGamesMenuParent: false}, this.handleShowGameMenu );
     }
 
     hoverOnGamesMenu(){
-        this.setState({
-            hoveringOnGamesMenu: true,
-            showGamesMenu: true
-        })
+        this.setState( {hoveringOnGamesMenu: true}, this.handleShowGameMenu );
     }
 
     leaveHoverOnGamesMenu(){
-        this.setState({
-            hoveringOnGamesMenu: false,
-            showGamesMenu: this.state.hoveringOnGamesMenuParent ? true : false
-        })
+        this.setState( {hoveringOnGamesMenu: false}, this.handleShowGameMenu );
+    }
+
+    handleShowGameMenu(){
+        let showGamesMenu = this.state.hoveringOnGamesMenu || this.state.hoveringOnGamesMenuParent;
+        this.setState({ showGamesMenu });
     }
 
     render() {
@@ -73,6 +67,5 @@ class Home extends Component {
         );
     }
 }
-
 
 export default Home;
