@@ -16,7 +16,7 @@ class HighScoreTable extends Component {
                       let name = item.name || item[this.props.nameAlias];
 
                       return <tr key={i} >
-                        <td>{score} seconds</td>
+                        <td>{score}</td>
                         <td>{name}</td>
                       </tr>
                     })
