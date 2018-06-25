@@ -64,7 +64,7 @@ class Art extends Component {
 
           <div className='artWrapper'>
             <h1>Barnsley Fern</h1>
-            <p>A whole bunch of random points are plotted based on a mathematical formula, and the end result resembles a fern. Learn more <span><a target='_blank' href='https://en.wikipedia.org/wiki/Barnsley_fern' rel="noopener noreferrer">here</a></span>.</p>
+            <p>A whole bunch of individual points are plotted based on a mathematical formula, and the end result resembles a fern. Learn more <span><a target='_blank' href='https://en.wikipedia.org/wiki/Barnsley_fern' rel="noopener noreferrer">here</a></span>.</p>
             <div className='canvasWrapper'>
               <canvas width='600' height='600' id='fernCanvas'></canvas>
             </div>

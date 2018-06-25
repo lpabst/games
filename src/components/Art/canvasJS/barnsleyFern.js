@@ -41,8 +41,8 @@ const barnsleyFern = {
     update: function (artClass) {
         let { canvas, points } = artClass.fern.data;
 
-        if (points.length > 5000) return;
-        
+        if (points.length > 30000) return;
+
         let x = points[points.length - 1][0];
         let y = points[points.length - 1][1];
         let nextX, nextY, mappedX, mappedY;
@@ -78,7 +78,7 @@ const barnsleyFern = {
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // Draw the mapped points
-        context.fillStyle = '#fff';
+        context.fillStyle = '#7c7';
         mappedPoints.forEach(location => {
             context.fillRect(location[0], location[1], scale, scale);
         })
