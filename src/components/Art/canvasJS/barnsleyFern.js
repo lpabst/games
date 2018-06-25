@@ -40,6 +40,9 @@ const barnsleyFern = {
 
     update: function (artClass) {
         let { canvas, points } = artClass.fern.data;
+
+        if (points.length > 5000) return;
+        
         let x = points[points.length - 1][0];
         let y = points[points.length - 1][1];
         let nextX, nextY, mappedX, mappedY;
