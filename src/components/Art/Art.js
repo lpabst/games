@@ -3,6 +3,7 @@ import './Art.css';
 
 import sandPile from './canvasJS/sandPile.js';
 import gameOfLife from './canvasJS/gameOfLife.js';
+import barnsleyFern from './canvasJS/barnsleyFern.js';
 
 class Art extends Component {
   constructor(props){
@@ -16,6 +17,7 @@ class Art extends Component {
   componentDidMount(){
     sandPile.init(this);
     gameOfLife.init(this);
+    barnsleyFern.init(this);
   }
 
   clickToDropSand(e){
@@ -47,7 +49,6 @@ class Art extends Component {
           </div>
 
           <div className='artWrapper'>
-            
             <h1>Game of Life</h1>
             <p>Visualization of the game of life, a cellular automaton devised by the British mathematician John Horton Conway in 1970. Each cell is either alive or dead, and is updated each frame depending on how many alive neighbors it has. I've also added a button so you can toggle a 'fading' effect so you can watch the cell slowly fade as it "dies". Learn more <span><a target='_blank' href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' rel="noopener noreferrer">here</a></span>.</p>
             
@@ -59,11 +60,10 @@ class Art extends Component {
             <div className='canvasWrapper'>
               <canvas width='600' height='600' id='gameOfLifeCanvas'></canvas>
             </div>
-
           </div>
 
           <div className='canvasWrapper'>
-            <canvas width='600' height='600' id='canvas3'></canvas>
+            <canvas width='600' height='600' id='fernCanvas'></canvas>
           </div>
 
         </div>
